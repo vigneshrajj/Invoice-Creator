@@ -96,16 +96,17 @@ module.exports = {
         
     },
     logout: (req, res) => {
-        res.cookie('jwt', '', { maxAge: 1 });
-        res.redirect('/');
+        res.header("Access-Control-Allow-Origin", 'http://localhost:3000');
+        res.cookie('jwt', '', { httpOnly: true, maxAge: 1 });
+        res.status(200).send({ message : "logged out" });
     },
     authCheck: (req, res) => {
-        if(req.cookies.jwt) {
-            jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET, (err, token) => {
+        if(req.cookies && req.cookies.jwt) {
+            jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET, (err) => {
                 if(err) {
                     res.json({isAuth: false});
                 } else {
-                    const expiration = jwt.decode(res.cookies.jwt).exp
+                    const expiration = jwt.decode(req.cookies.jwt).exp
                     const expirationDate = new Date(expiration * 1000);
                     res.json({isAuth: expirationDate > Date.now()})
                 }
@@ -114,19 +115,4 @@ module.exports = {
             res.json({isAuth: false});
         }
     }
-    // authCheck: (req, res) => {
-    //     if(req.cookies.jwt) {
-    //         jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET, (err, token) => {
-    //             if(err) {
-    //                 res.json({ error: "User not authenticated"});
-    //                 res.redirect('/login');
-    //             } else {
-    //                 res.status(200).json({ user: token.id });
-    //             }
-    //         })
-    //     } else {
-    //         res.status(401).json({ error: "User not authenticated"});
-    //         res.redirect('/login');
-    //     }
-    // }
 };

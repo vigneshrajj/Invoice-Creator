@@ -8,20 +8,24 @@ export default (ChildComponent) => {
         const res = await axios.get('http://localhost:3001/api/auth-check', {
             headers: {
                 'content-type': 'application/json'
-            }
+            },
+            withCredentials: true,
         });
-        console.log(res.data.isAuth, "second");
-        return res.data.isAuth;
+        const data = await res.data.isAuth;
+        return data;
     }
 
     function ComposedComponent(props) {
-        function shouldNavigateAway() {
-            if (!isAuth()) props.history.push("/login");
+        async function shouldNavigateAway() {
+            if (!(await isAuth()) && !(window.location.href.split('/')[3] === 'signup' || window.location.href.split('/')[3] === 'login')) {
+                props.history.push("/login");
+            } else if (await isAuth() && (window.location.href.split('/')[3] === 'signup' || window.location.href.split('/')[3] === 'login')) {
+                props.history.push('/');
+            }
         }
 
         useEffect(() => {
             shouldNavigateAway();
-            console.log(props)
         }, [shouldNavigateAway]);
 
         return <ChildComponent {...props} />;

@@ -2,9 +2,10 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux';
 import { login, googleSignin } from '../redux/User/user.asyncActions';
 import { GoogleLogin } from 'react-google-login';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
+import requireAuth from './require.auth';
 
-const Login = ({ errors, login, googleSignin }) => {
+const Login = ({ errors, login, googleSignin, history }) => {
     const [fields, setFields] = useState({
         email: '',
         password: '',
@@ -15,29 +16,30 @@ const Login = ({ errors, login, googleSignin }) => {
         setFields({ ...fields, [e.target.name]: e.target.value });
     }
 
-    const submitForm = () => {
-        login(fields);
+    const submitForm = async () => {
+        await login(fields);
+        history.push('/');
         setFields({
             email: '',
             password: '',
         })
     }
 
-    const responseSuccessGoogle = (res) => {
+    const responseSuccessGoogle = async (res) => {
         setGoogleErrors('');
-        googleSignin({
+        await googleSignin({
             tokenId: res.tokenId,
             name: res.profileObj.name,
             email: res.profileObj.email,
         });
-        console.log('success', res);
+        history.push('/');
     }
 
     const responseFailGoogle = (res) => {
         setGoogleErrors(res.error.split('_').join(' '));
     }
     return (
-        <div className="w-full h-screen flex items-center justify-center overflow-y-scroll bg-gray-800">
+        <div className="w-full h-screen flex flex-col items-center justify-center overflow-y-scroll bg-gray-800">
             <div className="bg-gray-200 w-96 h-auto rounded-lg pt-8 pb-8 px-8 flex flex-col items-center">
                 <label className="font-light text-4xl mb-4"><span className="font-bold">Invoicer</span></label>
                 <input onChange={updateFields} name="email" value={fields.email} type="text" className="w-full h-12 rounded-lg px-4 text-lg focus:ring-blue-600 mb-4" placeholder="Email" />
@@ -71,6 +73,7 @@ const Login = ({ errors, login, googleSignin }) => {
                     </div>
                 }
             </div>
+            <p className="text-gray-100 mt-2">Don't have an account? <Link to='/signup'><a className="text-gray-500">Signup</a></Link></p>
         </div>
     )
 }
@@ -89,4 +92,4 @@ const mapDispatchToProps = (dispatch) => {
     });
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Login));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(requireAuth(Login)));

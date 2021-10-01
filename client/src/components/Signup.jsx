@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux';
-import { signup, googleSignin, logout } from '../redux/User/user.asyncActions';
+import { signup, googleSignin } from '../redux/User/user.asyncActions';
 import { GoogleLogin } from 'react-google-login';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import requireAuth from './require.auth';
 
-const Signup = ({ errors, signup, googleSignin, logout }) => {
+const Signup = ({ errors, signup, googleSignin, history }) => {
     const [fields, setFields] = useState({
         name: '',
         email: '',
@@ -18,8 +18,9 @@ const Signup = ({ errors, signup, googleSignin, logout }) => {
         setFields({ ...fields, [e.target.name]: e.target.value });
     }
 
-    const submitForm = () => {
-        signup(fields);
+    const submitForm = async () => {
+        await signup(fields);
+        history.push('/');
         setFields({
             name: '',
             email: '',
@@ -28,21 +29,21 @@ const Signup = ({ errors, signup, googleSignin, logout }) => {
         })
     }
 
-    const responseSuccessGoogle = (res) => {
+    const responseSuccessGoogle = async (res) => {
         setGoogleErrors('');
-        googleSignin({
+        await googleSignin({
             tokenId: res.tokenId,
             name: res.profileObj.name,
             email: res.profileObj.email,
         });
-        console.log('success', res);
+        history.push('/');
     }
 
     const responseFailGoogle = (res) => {
         setGoogleErrors(res.error.split('_').join(' '));
     }
     return (
-        <div className="w-full h-screen flex items-center justify-center overflow-y-scroll bg-gray-800">
+        <div className="w-full h-screen flex flex-col items-center justify-center overflow-y-scroll bg-gray-800">
             <div className="bg-gray-200 w-96 h-auto rounded-lg pt-8 pb-8 px-8 flex flex-col items-center">
                 <label className="font-light text-4xl mb-4"><span className="font-bold">Invoicer</span></label>
                 <input onChange={updateFields} name="name" value={fields.name} type="text" className="w-full h-12 rounded-lg px-4 text-lg focus:ring-blue-600 mb-4" placeholder="Full Name" />
@@ -70,7 +71,6 @@ const Signup = ({ errors, signup, googleSignin, logout }) => {
                     </div>
                 }
                 <button onClick={submitForm} className="w-full h-12 rounded-lg bg-blue-600 text-gray-200 uppercase font-semibold hover:bg-blue-700 text-gray-100 transition mb-4">Signup</button>
-                <button onClick={logout} className="w-full h-12 rounded-lg bg-blue-600 text-gray-200 uppercase font-semibold hover:bg-blue-700 text-gray-100 transition mb-4">Logout</button>
                 {/* <p className="text-right mb-4">Forgot password</p> */}
                 <label className="text-gray-800 mb-4">or</label>
                 <GoogleLogin
@@ -91,6 +91,7 @@ const Signup = ({ errors, signup, googleSignin, logout }) => {
                 {/* <button className="w-full h-12 rounded-lg bg-blue-600 text-gray-200 uppercase font-semibold hover:bg-blue-700 text-gray-100 transition mb-4">Sign with Facebook</button>
                 <button className="w-full h-12 rounded-lg bg-gray-800 text-gray-200 uppercase font-semibold hover:bg-gray-900 text-gray-100 transition mb-4">Sign with Github</button> */}
             </div>
+            <p className="text-gray-100 mt-2">Already have an account? <Link to='/login'><a className="text-gray-500">Login</a></Link></p>
         </div>
     )
 }
@@ -105,7 +106,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return ({
         signup: (payload) => dispatch(signup(payload)),
-        logout: () => dispatch(logout()),
         googleSignin: (payload) => dispatch(googleSignin(payload)),
     });
 }
