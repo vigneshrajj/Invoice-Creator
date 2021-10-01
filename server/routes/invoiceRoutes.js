@@ -1,11 +1,13 @@
-// const { Router } = require('express');
-// const invoiceController = require('../controllers/invoiceController');
+const { Router } = require('express');
+const invoiceController = require('../controllers/invoiceController');
 
-// const router = Router();
+const router = Router();
 
-// router.get('/invoice/:id', invoiceController.invoice_get);
-// router.post('/invoice/:id', invoiceController.invoice_post);
-// router.put('/invoice/:id', invoiceController.invoice_update);
-// router.delete('/invoice/:id', invoiceController.invoice_delete);
+router.post('/', invoiceController.createInvoice);
+router.patch('/:id', invoiceController.updateInvoice);
+router.delete('/:id', invoiceController.deleteInvoice);
+router.get('/list', invoiceController.getAllInvoices);
+router.get('/search', invoiceController.searchInvoice);
+router.get('/:id', invoiceController.getInvoice);
 
-// module.exports = router;
+module.exports = router;
