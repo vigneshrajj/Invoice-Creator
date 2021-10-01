@@ -19,9 +19,10 @@ const userSchema = new mongoose.Schema({
         minlength: [6, "Minimum 6 characters required"],
     },
     phone: {
-        type: Number,
-        required: [true, "Please enter a phone number"],
-        minlength: [8, "Invalid phone number"],
+        type: String,
+    },
+    isSocial: {
+        type: Boolean,
     },
 });
 
@@ -36,6 +37,7 @@ userSchema.pre('save', async function (next) {
 userSchema.statics.login = async function(email, password) {
     const user = await this.findOne({ email });
     if(user) {
+        if(user.isSocial) throw Error('Social error');
         const auth = await bcrypt.compare(password, user.password);
         if(auth) {
             return user;

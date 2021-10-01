@@ -7,3 +7,4 @@ client/dist
 client/dist-ssr
 client/*.local
 client/gitt
+client/.env
