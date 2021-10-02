@@ -17,8 +17,9 @@ const reducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 errors: action.payload,
             };
-        default: return state;
+        default:
+            return state;
     }
-}
+};
 
 export default reducer;

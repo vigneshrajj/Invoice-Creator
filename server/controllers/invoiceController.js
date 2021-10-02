@@ -16,6 +16,7 @@ module.exports = {
     createInvoice: async (req, res) => {
         const {
             user,
+            invoiceNo,
             fromAddress,
             fromCity,
             fromZip,
@@ -28,12 +29,14 @@ module.exports = {
             toCountry,
             invoiceDate,
             paymentDue,
+            status,
             productDetails,
         } = req.body;
 
         try {
             const response = await Invoice.create({
                 user,
+                invoiceNo,
                 fromAddress,
                 fromCity,
                 fromZip,
@@ -46,6 +49,7 @@ module.exports = {
                 toCountry,
                 invoiceDate,
                 paymentDue,
+                status,
                 productDetails,
             });
             res.status(201).json({
@@ -75,9 +79,10 @@ module.exports = {
             }
         });
     },
-    getAllInvoices: (req, res) => {
+    getAllInvoices: async (req, res) => {
         const { pageNo, itemsCount, user } = req.query;
         console.log(pageNo, itemsCount);
+        var count = await Invoice.find({ user }).countDocuments();
 
         Invoice.find({ user })
             .limit(parseInt(itemsCount))
@@ -89,7 +94,7 @@ module.exports = {
                     });
                 } else {
                     if (invoices) {
-                        res.status(200).json({ invoices });
+                        res.status(200).json({ invoices, count });
                     } else {
                         res.status(404).json({
                             error: 'Items not found',

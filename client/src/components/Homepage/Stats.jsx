@@ -83,25 +83,25 @@ const Stats = () => {
             <div className='p-2 w-full text-center text-gray-400 grid grid-cols-2 gap-2 grid-rows-2'>
                 <div className='detail-card rounded-xl shadow-xl flex flex-col justify-center items-center'>
                     <p className='font-bold text-2xl'>Total revenue</p>
-                    <p className='=text-lg mb-2' style={{ color: '#00C49A' }}>
+                    <p className='text-lg mb-2' style={{ color: '#00C49A' }}>
                         ₹300
                     </p>
                 </div>
                 <div className='detail-card rounded-xl shadow-xl flex flex-col justify-center items-center'>
                     <p className='font-bold text-2xl'>Clients</p>
-                    <p className='=text-lg mb-2' style={{ color: '#00C49A' }}>
+                    <p className='text-lg mb-2' style={{ color: '#00C49A' }}>
                         300
                     </p>
                 </div>
                 <div className='detail-card rounded-xl shadow-xl flex flex-col justify-center items-center'>
                     <p className='font-bold text-2xl'>Loyalty</p>
-                    <p className='=text-lg' style={{ color: '#00C49A' }}>
+                    <p className='text-lg' style={{ color: '#00C49A' }}>
                         70%
                     </p>
                 </div>
                 <div className='detail-card rounded-xl shadow-xl flex flex-col justify-center items-center'>
                     <p className='font-bold text-2xl'>Invoices</p>
-                    <p className='=text-lg' style={{ color: '#00C49A' }}>
+                    <p className='text-lg' style={{ color: '#00C49A' }}>
                         250
                     </p>
                 </div>

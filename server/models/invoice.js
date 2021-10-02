@@ -5,6 +5,10 @@ const invoiceSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    invoiceNo: {
+        type: String,
+        required: [true, 'Invoice number field empty'],
+    },
     fromAddress: {
         type: String,
         required: [true, 'Address field empty'],

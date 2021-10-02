@@ -42,18 +42,18 @@ const Home = ({ logout, history }) => {
                     className='search-bar w-full h-10 px-2 grid gap-x-3'
                     style={{ gridTemplateColumns: 'auto 2rem 8rem' }}
                 >
-                    <div class='px-2 flex justify-between rounded bg-gray-300 w-full'>
+                    <div className='px-2 flex justify-between rounded bg-gray-300 w-full'>
                         <input
-                            class='flex-grow outline-none text-gray-600 bg-gray-300'
+                            className='flex-grow outline-none text-gray-600 bg-gray-300'
                             type='text'
                             placeholder='Search Invoice...'
                         />
                         <AiOutlineSearch className='mt-1 text-2xl text-gray-500 hover:text-gray-800 transition-colors duration-100 cursor-pointer' />
                     </div>
-                    <button className='bg-gray-800 rounded-xl flex justify-center items-center text-white text-2xl'>
+                    <button className='bg-gray-800 rounded-full flex justify-center items-center text-white text-2xl hover:bg-gray-900 transition-colors duration-100'>
                         <TiDocumentAdd />
                     </button>
-                    <button className='bg-gray-800 rounded-xl text-white'>
+                    <button className='bg-gray-800 rounded-xl text-white hover:bg-gray-900 transition-colors duration-100'>
                         Filter
                     </button>
                 </div>
