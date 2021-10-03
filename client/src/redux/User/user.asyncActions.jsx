@@ -1,18 +1,14 @@
 import axios from 'axios';
 
-const endpoint = (url) => {
-    const apiUrl = 'http://localhost:3001/api';
-    return apiUrl + url;
-};
+const instance = axios.create({
+    baseURL: 'http://localhost:3001/api',
+    withCredentials: true,
+    headers: { 'Content-Type': 'application/json' },
+});
 
 export const signup = (payload) => async (dispatch) => {
     try {
-        const res = await axios.post(endpoint('/signup'), payload, {
-            headers: {
-                'content-type': 'application/json',
-            },
-            withCredentials: true,
-        });
+        const res = await instance.post('/signup', payload);
         const user = await res.data.user;
         dispatch({ type: 'AUTH_SUCCESS', payload: user });
     } catch (err) {
@@ -22,12 +18,7 @@ export const signup = (payload) => async (dispatch) => {
 
 export const login = (payload) => async (dispatch) => {
     try {
-        const res = await axios.post(endpoint('/login'), payload, {
-            headers: {
-                'content-type': 'application/json',
-            },
-            withCredentials: true,
-        });
+        const res = await instance.post('/login', payload);
         const user = await res.data.user;
         dispatch({ type: 'AUTH_SUCCESS', payload: user });
     } catch (err) {
@@ -37,12 +28,7 @@ export const login = (payload) => async (dispatch) => {
 
 export const googleSignin = (payload) => async (dispatch) => {
     try {
-        const res = await axios.post(endpoint('/google-login'), payload, {
-            headers: {
-                'content-type': 'application/json',
-            },
-            withCredentials: true,
-        });
+        const res = await instance.post('/google-login', payload);
         const user = await res.data.user;
         dispatch({ type: 'AUTH_SUCCESS', payload: user });
     } catch (err) {
@@ -51,7 +37,5 @@ export const googleSignin = (payload) => async (dispatch) => {
 };
 
 export const logout = () => async () => {
-    await axios.get(endpoint('/logout'), {
-        withCredentials: true,
-    });
+    await instance.get('/logout');
 };

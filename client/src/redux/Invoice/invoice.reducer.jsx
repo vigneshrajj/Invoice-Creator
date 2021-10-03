@@ -1,13 +1,17 @@
 import {
     GET_INVOICES,
     GET_INVOICE_COUNT,
+    GET_STATS,
+    GET_CHART_DATA,
     ACTION_FAILURE,
 } from './invoice.types';
 
 const INITIAL_STATE = {
-    invoices: {},
+    invoices: [],
     invoiceCount: null,
     currentInvoice: {},
+    statInvoices: [],
+    chartData: [],
     error: '',
 };
 
@@ -22,6 +26,16 @@ const reducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 invoiceCount: action.payload,
+            };
+        case GET_STATS:
+            return {
+                ...state,
+                statInvoices: action.payload,
+            };
+        case GET_CHART_DATA:
+            return {
+                ...state,
+                chartData: action.payload,
             };
         case ACTION_FAILURE:
             return {

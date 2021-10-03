@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import requireAuth from './require.auth';
 import { logout } from '../redux/User/user.asyncActions';
+import { getStats } from '../redux/Invoice/invoice.asyncActions';
 import { HiOutlineLogout } from 'react-icons/hi';
 import { TiDocumentAdd } from 'react-icons/ti';
 import { AiOutlineSearch } from 'react-icons/ai';
@@ -10,7 +11,11 @@ import InvoiceTable from './Homepage/InvoiceTable';
 import Stats from './Homepage/Stats';
 import Clients from './Homepage/Clients';
 
-const Home = ({ logout, history }) => {
+const Home = ({ logout, history, getStats, statInvoices, chartData }) => {
+    useEffect(() => {
+        getStats();
+    }, []);
+
     const logoutAction = async () => {
         await logout();
         history.push('/login');
@@ -62,7 +67,7 @@ const Home = ({ logout, history }) => {
                         <InvoiceTable />
                     </div>
                     <div className='card bg-gray-800 rounded col-span-3 pt-8 flex relative'>
-                        <Stats />
+                        <Stats {...{ statInvoices, chartData }} />
                     </div>
                     <div className='card bg-gray-800 rounded text-gray-300'>
                         <Clients />
@@ -73,10 +78,21 @@ const Home = ({ logout, history }) => {
     );
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapStateToProps = (state) => {
     return {
-        logout: () => dispatch(logout()),
+        statInvoices: state.invoice.statInvoices,
+        chartData: state.invoice.chartData,
     };
 };
 
-export default connect(null, mapDispatchToProps)(withRouter(requireAuth(Home)));
+const mapDispatchToProps = (dispatch) => {
+    return {
+        logout: () => dispatch(logout()),
+        getStats: () => dispatch(getStats()),
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(withRouter(requireAuth(Home)));

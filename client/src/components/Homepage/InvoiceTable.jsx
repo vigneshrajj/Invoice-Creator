@@ -60,14 +60,14 @@ const InvoiceTable = ({ invoices, invoiceCount, getAllInvoices }) => {
                         <button
                             onClick={prevPage}
                             disabled={pageNo <= 1}
-                            className='block py-1 px-3 leading-tight bg-gray-800 text-white cursor-pointer select-none ml-0 rounded-l-lg hover:bg-gray-900 disabled:bg-gray-200 transition-colors duration-100'
+                            className='block py-1 px-3 leading-tight bg-gray-800 text-white cursor-pointer select-none ml-0 rounded-l-lg hover:bg-gray-900 disabled:bg-gray-900 disabled:text-gray-400 disabled:cursor-default transition-colors duration-100'
                         >
                             Previous
                         </button>
                         <button
                             onClick={nextPage}
                             disabled={pageNo >= invoiceCount / itemsCount}
-                            className='block py-1 px-3 leading-tight bg-gray-800 text-white cursor-pointer select-none rounded-r-lg hover:bg-gray-900 disabled:bg-gray-200 transition-colors duration-100'
+                            className='block py-1 px-3 leading-tight bg-gray-800 text-white cursor-pointer select-none rounded-r-lg hover:bg-gray-900 disabled:bg-gray-900 disabled:text-gray-400 disabled:cursor-default transition-colors duration-100'
                         >
                             Next
                         </button>

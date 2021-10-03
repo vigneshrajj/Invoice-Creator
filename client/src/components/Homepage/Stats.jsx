@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import moment from 'moment';
 import {
     AreaChart,
     Area,
@@ -8,29 +9,97 @@ import {
     ResponsiveContainer,
 } from 'recharts';
 
-const Stats = () => {
-    const data = [
+const Stats = ({ statInvoices, chartData }) => {
+    const [stats, setStats] = useState({});
+    const [calculatedData, setCalculatedData] = useState([
         {
-            month: 'Jan',
-            earning: '200',
+            Month: 'Jan',
+            Revenue: '200',
         },
         {
-            month: 'Feb',
-            earning: '500',
+            Month: 'Feb',
+            Revenue: '500',
         },
         {
-            month: 'Mar',
-            earning: '300',
+            Month: 'Mar',
+            Revenue: '300',
         },
         {
-            month: 'Apr',
-            earning: '400',
+            Month: 'Apr',
+            Revenue: '400',
         },
         {
-            month: 'May',
-            earning: '500',
+            Month: 'May',
+            Revenue: '500',
         },
-    ];
+    ]);
+
+    useEffect(() => {
+        statCalculations();
+        chartDataCalculations();
+    }, []);
+
+    const statCalculations = () => {
+        let tempStats = {
+            revenue: 0,
+            clients: 0,
+            loyalty: 0,
+            invoices: 0,
+        };
+        if (statInvoices) {
+            let paid = 0;
+            let overdue = 0;
+            statInvoices.forEach((stat) => {
+                if (stat.status === 'paid') {
+                    paid++;
+                    stat.productDetails.itemList &&
+                        stat.productDetails.itemList.forEach((item) => {
+                            tempStats.revenue += item.qty * item.price;
+                        });
+                } else if (stat.status === 'overdue') overdue++;
+            });
+            tempStats.revenue = tempStats.revenue.toFixed(2);
+            tempStats.loyalty = ((paid / (paid + overdue)) * 100).toFixed(2);
+            tempStats.clients = [
+                ...new Set(statInvoices.map((item) => item.clientEmail)),
+            ].length;
+            tempStats.invoices = statInvoices.length;
+        }
+        setStats(tempStats);
+    };
+
+    const chartDataCalculations = async () => {
+        let newChartData = chartData.map((data) => {
+            let monthlyRevenue = 0;
+            data.data.forEach((item) => {
+                item.qty.forEach((it, index, arr) => {
+                    monthlyRevenue += arr[index] * item.price[index];
+                });
+            });
+            return {
+                Month: data._id.month - 1,
+                Revenue: monthlyRevenue,
+            };
+        });
+        let monthArr = new Array(12).fill(null);
+        newChartData.forEach((item) => {
+            if (!monthArr[item.Month]) monthArr[item.Month] = item.Revenue;
+        });
+        monthArr = monthArr.map((item, index) => {
+            if (item === null) {
+                return {
+                    Month: moment().month(index).format('MMM'),
+                    Revenue: 0,
+                };
+            } else {
+                return {
+                    Month: moment().month(index).format('MMM'),
+                    Revenue: item,
+                };
+            }
+        });
+        setCalculatedData(monthArr);
+    };
 
     return (
         <>
@@ -38,7 +107,7 @@ const Stats = () => {
                 Monthly income
             </p>
             <ResponsiveContainer width='100%' height='100%'>
-                <AreaChart data={data}>
+                <AreaChart data={calculatedData}>
                     <defs>
                         <linearGradient
                             id='colorEarning'
@@ -61,14 +130,14 @@ const Stats = () => {
                     </defs>
                     <Area
                         type='monotone'
-                        dataKey='earning'
+                        dataKey='Revenue'
                         stroke='#00C49A'
                         fillOpacity={1}
                         fill='url(#colorEarning)'
                         dot={{ fill: '#fff' }}
                     />
                     <XAxis
-                        dataKey='month'
+                        dataKey='Month'
                         stroke='rgba(156, 163, 175)'
                         style={{ fontSize: 15 }}
                     />
@@ -84,25 +153,25 @@ const Stats = () => {
                 <div className='detail-card rounded-xl shadow-xl flex flex-col justify-center items-center'>
                     <p className='font-bold text-2xl'>Total revenue</p>
                     <p className='text-lg mb-2' style={{ color: '#00C49A' }}>
-                        ₹300
+                        ₹{stats.revenue}
                     </p>
                 </div>
                 <div className='detail-card rounded-xl shadow-xl flex flex-col justify-center items-center'>
                     <p className='font-bold text-2xl'>Clients</p>
                     <p className='text-lg mb-2' style={{ color: '#00C49A' }}>
-                        300
+                        {stats.clients}
                     </p>
                 </div>
                 <div className='detail-card rounded-xl shadow-xl flex flex-col justify-center items-center'>
                     <p className='font-bold text-2xl'>Loyalty</p>
                     <p className='text-lg' style={{ color: '#00C49A' }}>
-                        70%
+                        {stats.loyalty}%
                     </p>
                 </div>
                 <div className='detail-card rounded-xl shadow-xl flex flex-col justify-center items-center'>
                     <p className='font-bold text-2xl'>Invoices</p>
                     <p className='text-lg' style={{ color: '#00C49A' }}>
-                        250
+                        {stats.invoices}
                     </p>
                 </div>
             </div>

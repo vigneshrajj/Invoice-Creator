@@ -1,4 +1,5 @@
 const Invoice = require('../models/invoice');
+const jwt = require('jsonwebtoken');
 
 const handleErrors = (err) => {
     console.log(err.message, err.code);
@@ -15,7 +16,6 @@ const handleErrors = (err) => {
 module.exports = {
     createInvoice: async (req, res) => {
         const {
-            user,
             invoiceNo,
             fromAddress,
             fromCity,
@@ -32,6 +32,8 @@ module.exports = {
             status,
             productDetails,
         } = req.body;
+
+        const { user } = req;
 
         try {
             const response = await Invoice.create({
@@ -80,11 +82,14 @@ module.exports = {
         });
     },
     getAllInvoices: async (req, res) => {
-        const { pageNo, itemsCount, user } = req.query;
-        console.log(pageNo, itemsCount);
-        var count = await Invoice.find({ user }).countDocuments();
+        const { user } = req;
+        const { pageNo, itemsCount } = req.query;
+        const count = await Invoice.find({ user }).countDocuments();
 
         Invoice.find({ user })
+            .select(
+                '_id invoiceNo clientEmail clientName status paymentDue invoiceDate productDetails'
+            )
             .limit(parseInt(itemsCount))
             .skip((parseInt(pageNo) - 1) * parseInt(itemsCount))
             .exec((err, invoices) => {
@@ -102,6 +107,55 @@ module.exports = {
                     }
                 }
             });
+    },
+    getStats: async (req, res) => {
+        const { user } = req;
+        const statInvoices = await Invoice.find({ user }).select(
+            'productDetails status clientEmail'
+        );
+
+        const chartData = await Invoice.aggregate([
+            { $sort: { paymentDue: -1 } },
+            {
+                $match: {
+                    'productDetails.itemList': {
+                        $ne: [],
+                    },
+                    status: 'paid',
+                },
+            },
+            {
+                $group: {
+                    _id: {
+                        month: {
+                            $month: '$paymentDue',
+                        },
+                        year: {
+                            $year: '$paymentDue',
+                        },
+                        qty: '$productDetails.itemList.qty',
+                        price: '$productDetails.itemList.price',
+                    },
+                },
+            },
+            {
+                $group: {
+                    _id: {
+                        month: '$_id.month',
+                        year: '$_id.year',
+                    },
+                    data: {
+                        $push: {
+                            month: '$_id.month',
+                            year: '$_id.year',
+                            qty: '$_id.qty',
+                            price: '$_id.price',
+                        },
+                    },
+                },
+            },
+        ]);
+        res.status(200).json({ statInvoices, chartData });
     },
     updateInvoice: (req, res) => {
         const { id } = req.params;
@@ -149,7 +203,7 @@ module.exports = {
     },
     searchInvoice: (req, res) => {
         const { searchString } = req.query;
-        const { user } = req.body;
+        const { user } = req;
 
         Invoice.find({
             $text: { $search: `"${user}" "${searchString}"` },
