@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import requireAuth from './require.auth';
@@ -10,8 +10,11 @@ import { AiOutlineSearch } from 'react-icons/ai';
 import InvoiceTable from './Homepage/InvoiceTable';
 import Stats from './Homepage/Stats';
 import Clients from './Homepage/Clients';
+import CreateInvoice from './Homepage/CreateInvoice/CreateInvoice';
 
 const Home = ({ logout, history, getStats, statInvoices, chartData }) => {
+    const [invoiceModal, setInvoiceModal] = useState(false);
+
     useEffect(() => {
         getStats();
     }, []);
@@ -22,7 +25,7 @@ const Home = ({ logout, history, getStats, statInvoices, chartData }) => {
     };
 
     return (
-        <div>
+        <div className='overflow-hidden'>
             <div className='w-full h-screen flex flex-col items-center bg-gray-700'>
                 <div
                     className='header w-full h-12 m-2 grid gap-x-3'
@@ -55,13 +58,19 @@ const Home = ({ logout, history, getStats, statInvoices, chartData }) => {
                         />
                         <AiOutlineSearch className='mt-1 text-2xl text-gray-500 hover:text-gray-800 transition-colors duration-100 cursor-pointer' />
                     </div>
-                    <button className='bg-gray-800 rounded-full flex justify-center items-center text-white text-2xl hover:bg-gray-900 transition-colors duration-100'>
+                    <button
+                        onClick={() => setInvoiceModal(true)}
+                        className='bg-gray-800 rounded-full flex justify-center items-center text-white text-2xl hover:bg-gray-900 transition-colors duration-100'
+                    >
                         <TiDocumentAdd />
                     </button>
                     <button className='bg-gray-800 rounded-xl text-white hover:bg-gray-900 transition-colors duration-100'>
                         Filter
                     </button>
                 </div>
+                {invoiceModal && (
+                    <CreateInvoice setInvoiceModal={setInvoiceModal} />
+                )}
                 <div className='main-container w-full h-full p-2 grid grid-cols-4 gap-2'>
                     <div className='card col-span-4'>
                         <InvoiceTable />

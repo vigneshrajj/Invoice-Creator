@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { animated, useSpring, config } from 'react-spring';
 import moment from 'moment';
 import {
     AreaChart,
@@ -8,6 +9,22 @@ import {
     Tooltip,
     ResponsiveContainer,
 } from 'recharts';
+
+const CardData = ({ innerText, cardType }) => {
+    const { number } = useSpring({
+        from: { number: 0 },
+        number: parseInt(innerText),
+        delay: 100,
+        config: config.mollases,
+    });
+    return (
+        <p className='text-lg mb-2' style={{ color: '#00C49A' }}>
+            {cardType === 'revenue' && <span>₹</span>}
+            <animated.span>{number.to((n) => n.toFixed(0))}</animated.span>
+            {cardType === 'loyalty' && <span>%</span>}
+        </p>
+    );
+};
 
 const Stats = ({ statInvoices, chartData }) => {
     const [stats, setStats] = useState({});
@@ -152,26 +169,33 @@ const Stats = ({ statInvoices, chartData }) => {
             <div className='p-2 w-full text-center text-gray-400 grid grid-cols-2 gap-2 grid-rows-2'>
                 <div className='detail-card rounded-xl shadow-xl flex flex-col justify-center items-center'>
                     <p className='font-bold text-2xl'>Total revenue</p>
-                    <p className='text-lg mb-2' style={{ color: '#00C49A' }}>
-                        ₹{stats.revenue}
-                    </p>
+                    <CardData innerText={stats.revenue} cardType='revenue' />
                 </div>
                 <div className='detail-card rounded-xl shadow-xl flex flex-col justify-center items-center'>
                     <p className='font-bold text-2xl'>Clients</p>
                     <p className='text-lg mb-2' style={{ color: '#00C49A' }}>
-                        {stats.clients}
+                        <CardData
+                            innerText={stats.clients}
+                            cardType='clients'
+                        />
                     </p>
                 </div>
                 <div className='detail-card rounded-xl shadow-xl flex flex-col justify-center items-center'>
                     <p className='font-bold text-2xl'>Loyalty</p>
                     <p className='text-lg' style={{ color: '#00C49A' }}>
-                        {stats.loyalty}%
+                        <CardData
+                            innerText={stats.loyalty}
+                            cardType='loyalty'
+                        />
                     </p>
                 </div>
                 <div className='detail-card rounded-xl shadow-xl flex flex-col justify-center items-center'>
                     <p className='font-bold text-2xl'>Invoices</p>
                     <p className='text-lg' style={{ color: '#00C49A' }}>
-                        {stats.invoices}
+                        <CardData
+                            innerText={stats.invoices}
+                            cardType='invoices'
+                        />
                     </p>
                 </div>
             </div>
