@@ -3,7 +3,7 @@ import { AiOutlineSwapRight } from 'react-icons/ai';
 import Gravatar from 'react-gravatar';
 import moment from 'moment';
 
-const Invoice = (invoice) => {
+const Invoice = ({ invoice, setInvoiceView }) => {
     const netAmount = (arr) => {
         var price = 0;
         arr.forEach((item) => {
@@ -13,7 +13,12 @@ const Invoice = (invoice) => {
     };
 
     return (
-        <tr>
+        <tr
+            onClick={() => {
+                setInvoiceView(invoice._id);
+            }}
+            className='cursor-pointer'
+        >
             <td className='p-2 rounded-l-lg bg-gray-800'>
                 <div className='flex align-items-center'>
                     <Gravatar
@@ -30,11 +35,18 @@ const Invoice = (invoice) => {
             </td>
             <td className='p-2 bg-gray-800'>{`#${invoice.invoiceNo}`}</td>
             <td className='p-2 bg-gray-800 font-bold'>{`₹${
-                invoice.productDetails.itemList.length &&
-                netAmount(invoice.productDetails.itemList)
+                invoice.itemList.length && netAmount(invoice.itemList)
             }`}</td>
             <td className='p-2 bg-gray-800'>
-                <span className='bg-red-400 text-gray-50 rounded-md px-2'>
+                <span
+                    className={`${
+                        invoice.status === 'overdue'
+                            ? 'bg-red-400'
+                            : invoice.status === 'pending'
+                            ? 'bg-yellow-400'
+                            : 'bg-green-400'
+                    } text-gray-50 rounded-md px-2 py-px`}
+                >
                     {invoice.status}
                 </span>
             </td>

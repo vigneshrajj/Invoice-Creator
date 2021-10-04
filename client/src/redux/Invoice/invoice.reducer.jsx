@@ -1,5 +1,6 @@
 import {
     GET_INVOICES,
+    GET_CURRENT_INVOICE,
     GET_INVOICE_COUNT,
     GET_STATS,
     GET_CHART_DATA,
@@ -17,6 +18,11 @@ const INITIAL_STATE = {
 
 const reducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
+        case GET_CURRENT_INVOICE:
+            return {
+                ...state,
+                currentInvoice: action.payload,
+            };
         case GET_INVOICES:
             return {
                 ...state,

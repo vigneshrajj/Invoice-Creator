@@ -3,7 +3,10 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import requireAuth from './require.auth';
 import { logout } from '../redux/User/user.asyncActions';
-import { getStats } from '../redux/Invoice/invoice.asyncActions';
+import {
+    getStats,
+    getAllInvoices,
+} from '../redux/Invoice/invoice.asyncActions';
 import { HiOutlineLogout } from 'react-icons/hi';
 import { TiDocumentAdd } from 'react-icons/ti';
 import { AiOutlineSearch } from 'react-icons/ai';
@@ -11,8 +14,17 @@ import InvoiceTable from './Homepage/InvoiceTable';
 import Stats from './Homepage/Stats';
 import Clients from './Homepage/Clients';
 import CreateInvoice from './Homepage/CreateInvoice/CreateInvoice';
+import Filter from './Homepage/Filter';
 
-const Home = ({ logout, history, getStats, statInvoices, chartData }) => {
+const Home = ({
+    logout,
+    history,
+    getStats,
+    getAllInvoices,
+    statInvoices,
+    chartData,
+}) => {
+    const [pageNo, setPageNo] = useState(1);
     const [invoiceModal, setInvoiceModal] = useState(false);
 
     useEffect(() => {
@@ -48,8 +60,15 @@ const Home = ({ logout, history, getStats, statInvoices, chartData }) => {
                 </div>
                 <div
                     className='search-bar w-full h-10 px-2 grid gap-x-3'
-                    style={{ gridTemplateColumns: 'auto 2rem 8rem' }}
+                    style={{ gridTemplateColumns: '3rem 8rem auto' }}
                 >
+                    <button
+                        onClick={() => setInvoiceModal(true)}
+                        className='bg-gray-800 px-2 rounded flex justify-center items-center text-white text-2xl hover:bg-gray-900 transition-colors duration-100'
+                    >
+                        <TiDocumentAdd />
+                    </button>
+                    <Filter />
                     <div className='px-2 flex justify-between rounded bg-gray-300 w-full'>
                         <input
                             className='flex-grow outline-none text-gray-600 bg-gray-300'
@@ -58,22 +77,22 @@ const Home = ({ logout, history, getStats, statInvoices, chartData }) => {
                         />
                         <AiOutlineSearch className='mt-1 text-2xl text-gray-500 hover:text-gray-800 transition-colors duration-100 cursor-pointer' />
                     </div>
-                    <button
-                        onClick={() => setInvoiceModal(true)}
-                        className='bg-gray-800 rounded-full flex justify-center items-center text-white text-2xl hover:bg-gray-900 transition-colors duration-100'
-                    >
-                        <TiDocumentAdd />
-                    </button>
-                    <button className='bg-gray-800 rounded-xl text-white hover:bg-gray-900 transition-colors duration-100'>
-                        Filter
-                    </button>
                 </div>
                 {invoiceModal && (
-                    <CreateInvoice setInvoiceModal={setInvoiceModal} />
+                    <CreateInvoice
+                        pageNo={pageNo}
+                        getAllInvoices={getAllInvoices}
+                        getStats={getStats}
+                        setInvoiceModal={setInvoiceModal}
+                    />
                 )}
                 <div className='main-container w-full h-full p-2 grid grid-cols-4 gap-2'>
                     <div className='card col-span-4'>
-                        <InvoiceTable />
+                        <InvoiceTable
+                            pageNo={pageNo}
+                            setPageNo={setPageNo}
+                            getAllInvoices={getAllInvoices}
+                        />
                     </div>
                     <div className='card bg-gray-800 rounded col-span-3 pt-8 flex relative'>
                         <Stats {...{ statInvoices, chartData }} />
@@ -98,6 +117,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         logout: () => dispatch(logout()),
         getStats: () => dispatch(getStats()),
+        getAllInvoices: (payload) => dispatch(getAllInvoices(payload)),
     };
 };
 

@@ -1,15 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Invoice from './Invoice';
-import { getAllInvoices } from '../../redux/Invoice/invoice.asyncActions';
+import InvoiceView from './InvoiceView';
 import { connect } from 'react-redux';
+import { getInvoice } from '../../redux/Invoice/invoice.asyncActions';
 
-const InvoiceTable = ({ invoices, invoiceCount, getAllInvoices }) => {
-    const [pageNo, setPageNo] = useState(1);
-    const itemsCount = 3;
-
+const InvoiceTable = ({
+    invoices,
+    invoiceCount,
+    pageNo,
+    setPageNo,
+    getAllInvoices,
+    getInvoice,
+    currentInvoice,
+}) => {
+    const [invoiceView, setInvoiceView] = useState(null);
     useEffect(async () => {
-        await getAllInvoices({ pageNo, itemsCount });
+        await getAllInvoices({ pageNo, itemsCount: 3 });
     }, [pageNo]);
+
+    useEffect(() => {
+        if (invoiceView) {
+            getInvoice(invoiceView);
+        }
+    }, [invoiceView]);
 
     const nextPage = () => {
         setPageNo(pageNo + 1);
@@ -49,9 +62,14 @@ const InvoiceTable = ({ invoices, invoiceCount, getAllInvoices }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {invoices &&
+                        {invoices.length &&
                             invoices.map((invoice, index) => {
-                                return <Invoice key={index} {...invoice} />;
+                                return (
+                                    <Invoice
+                                        key={index}
+                                        {...{ invoice, setInvoiceView }}
+                                    />
+                                );
                             })}
                     </tbody>
                 </table>
@@ -66,7 +84,7 @@ const InvoiceTable = ({ invoices, invoiceCount, getAllInvoices }) => {
                         </button>
                         <button
                             onClick={nextPage}
-                            disabled={pageNo >= invoiceCount / itemsCount}
+                            disabled={pageNo >= invoiceCount / 3}
                             className='block py-1 px-3 leading-tight bg-gray-800 text-white cursor-pointer select-none rounded-r-lg hover:bg-gray-900 disabled:bg-gray-900 disabled:text-gray-400 disabled:cursor-default transition-colors duration-100'
                         >
                             Next
@@ -74,20 +92,28 @@ const InvoiceTable = ({ invoices, invoiceCount, getAllInvoices }) => {
                     </ul>
                 </div>
             </div>
+            {invoiceView && currentInvoice && (
+                <InvoiceView
+                    setInvoiceView={setInvoiceView}
+                    currentInvoice={currentInvoice}
+                />
+            )}
         </div>
     );
 };
 
 const mapStateToProps = (state) => {
+    const { currentInvoice, invoices, invoiceCount } = state.invoice;
     return {
-        invoices: state.invoice.invoices,
-        invoiceCount: state.invoice.invoiceCount,
+        invoices,
+        invoiceCount,
+        currentInvoice,
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getAllInvoices: (payload) => dispatch(getAllInvoices(payload)),
+        getInvoice: (payload) => dispatch(getInvoice(payload)),
     };
 };
 

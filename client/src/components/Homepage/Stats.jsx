@@ -66,14 +66,14 @@ const Stats = ({ statInvoices, chartData }) => {
         if (statInvoices) {
             let paid = 0;
             let overdue = 0;
-            statInvoices.forEach((stat) => {
-                if (stat.status === 'paid') {
+            statInvoices.forEach((invoice) => {
+                if (invoice.status === 'paid') {
                     paid++;
-                    stat.productDetails.itemList &&
-                        stat.productDetails.itemList.forEach((item) => {
+                    invoice.itemList &&
+                        invoice.itemList.forEach((item) => {
                             tempStats.revenue += item.qty * item.price;
                         });
-                } else if (stat.status === 'overdue') overdue++;
+                } else if (invoice.status === 'overdue') overdue++;
             });
             tempStats.revenue = tempStats.revenue.toFixed(2);
             tempStats.loyalty = ((paid / (paid + overdue)) * 100).toFixed(2);

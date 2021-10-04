@@ -30,7 +30,8 @@ module.exports = {
             invoiceDate,
             paymentDue,
             status,
-            productDetails,
+            productDescription,
+            itemList,
         } = req.body;
 
         const { user } = req;
@@ -52,7 +53,8 @@ module.exports = {
                 invoiceDate,
                 paymentDue,
                 status,
-                productDetails,
+                productDescription,
+                itemList,
             });
             res.status(201).json({
                 message: 'Invoice created successfully',
@@ -88,7 +90,7 @@ module.exports = {
 
         Invoice.find({ user })
             .select(
-                '_id invoiceNo clientEmail clientName status paymentDue invoiceDate productDetails'
+                '_id invoiceNo clientEmail clientName status paymentDue invoiceDate itemList'
             )
             .limit(parseInt(itemsCount))
             .skip((parseInt(pageNo) - 1) * parseInt(itemsCount))
@@ -111,14 +113,14 @@ module.exports = {
     getStats: async (req, res) => {
         const { user } = req;
         const statInvoices = await Invoice.find({ user }).select(
-            'productDetails status clientEmail'
+            'itemList status clientEmail'
         );
 
         const chartData = await Invoice.aggregate([
             { $sort: { paymentDue: -1 } },
             {
                 $match: {
-                    'productDetails.itemList': {
+                    itemList: {
                         $ne: [],
                     },
                     status: 'paid',
@@ -133,8 +135,8 @@ module.exports = {
                         year: {
                             $year: '$paymentDue',
                         },
-                        qty: '$productDetails.itemList.qty',
-                        price: '$productDetails.itemList.price',
+                        qty: '$itemList.qty',
+                        price: '$itemList.price',
                     },
                 },
             },

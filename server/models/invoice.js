@@ -60,27 +60,25 @@ const invoiceSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Status field empty'],
     },
-    productDetails: {
-        productDescription: {
-            type: String,
-        },
-        itemList: [
-            {
-                name: {
-                    type: String,
-                    required: [true, 'Item name field empty'],
-                },
-                qty: {
-                    type: Number,
-                    required: [true, 'Quantity field empty'],
-                },
-                price: {
-                    type: Number,
-                    required: [true, 'Price field empty'],
-                },
-            },
-        ],
+    productDescription: {
+        type: String,
     },
+    itemList: [
+        {
+            name: {
+                type: String,
+                required: [true, 'Item name field empty'],
+            },
+            qty: {
+                type: Number,
+                required: [true, 'Quantity field empty'],
+            },
+            price: {
+                type: Number,
+                required: [true, 'Price field empty'],
+            },
+        },
+    ],
 });
 
 invoiceSchema.index({ '$**': 'text' });

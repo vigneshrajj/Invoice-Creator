@@ -1,5 +1,6 @@
 import {
     GET_INVOICES,
+    GET_CURRENT_INVOICE,
     GET_INVOICE_COUNT,
     GET_STATS,
     GET_CHART_DATA,
@@ -12,6 +13,25 @@ const instance = axios.create({
     withCredentials: true,
     headers: { 'Content-Type': 'application/json' },
 });
+
+export const createInvoice = (payload) => async (dispatch) => {
+    try {
+        const res = await instance.post('/', payload);
+        const message = await res.data.message;
+    } catch (err) {
+        dispatch({ type: ACTION_FAILURE, payload: err.response.data.errors });
+    }
+};
+
+export const getInvoice = (payload) => async (dispatch) => {
+    try {
+        const res = await instance.get('/' + payload);
+        const invoice = await res.data.invoice;
+        await dispatch({ type: GET_CURRENT_INVOICE, payload: invoice });
+    } catch (err) {
+        dispatch({ type: ACTION_FAILURE, payload: err.response.data.error });
+    }
+};
 
 export const getAllInvoices = (payload) => async (dispatch) => {
     try {
