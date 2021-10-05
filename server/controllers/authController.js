@@ -110,7 +110,7 @@ module.exports = {
         });
     },
     logout: (req, res) => {
-        res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+        res.header('Access-Control-Allow-Origin', 'https://invoice-app-vignesh.netlify.app');
         res.cookie('jwt', '', { httpOnly: true, maxAge: 1 });
         res.status(200).send({ message: 'logged out' });
     },
