@@ -54,7 +54,7 @@ module.exports = {
                 isSocial: false,
             });
             const token = createToken(user._id);
-            res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000, sameSite: true, secure: true });
+            res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000, sameSite: false, secure: true });
             res.status(201).json({ user: user._id });
         } catch (err) {
             const errors = handleErrors(err);
@@ -67,7 +67,7 @@ module.exports = {
         try {
             const user = await User.login(email, password);
             const token = createToken(user._id);
-            res.cookie('jwt', token, { httpOnly: true, secure: true, maxAge: maxAge * 1000, sameSite: true });
+            res.cookie('jwt', token, { httpOnly: true, secure: true, maxAge: maxAge * 1000, sameSite: false });
             res.status(200).json({ user: user._id });
         } catch (err) {
             const errors = handleErrors(err);
@@ -89,7 +89,7 @@ module.exports = {
                     res.cookie('jwt', token, {
                         httpOnly: true,
                         maxAge: maxAge * 1000,
-                        sameSite: true, secure: true
+                        sameSite: false, secure: true
                     });
                     res.status(200).json({ user: user._id });
                 } else {
@@ -104,7 +104,7 @@ module.exports = {
                     res.cookie('jwt', token, {
                         httpOnly: true,
                         maxAge: maxAge * 1000,
-                        sameSite: true, secure: true
+                        sameSite: false, secure: true
                     });
                     res.status(201).json({ user: user._id });
                 }
@@ -112,7 +112,7 @@ module.exports = {
         });
     },
     logout: (req, res) => {
-        res.cookie('jwt', '', { httpOnly: true, maxAge: 1, sameSite: true, secure: true });
+        res.cookie('jwt', '', { httpOnly: true, maxAge: 1, sameSite: false, secure: true });
         res.status(200).send({ message: 'logged out' });
     },
     authCheck: (req, res) => {
