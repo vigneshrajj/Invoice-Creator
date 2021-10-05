@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AiOutlineSwapRight } from 'react-icons/ai';
+import { RiEdit2Line, RiDeleteBin2Line } from 'react-icons/ri';
 import Gravatar from 'react-gravatar';
 import moment from 'moment';
+import CreateInvoice from './CreateInvoice/CreateInvoice';
 
-const Invoice = ({ invoice, setInvoiceView }) => {
+const Invoice = ({ invoice, setInvoiceView, deleteItem }) => {
+    const [invoiceModal, setInvoiceModal] = useState(false);
     const netAmount = (arr) => {
         var price = 0;
         arr.forEach((item) => {
@@ -13,13 +16,13 @@ const Invoice = ({ invoice, setInvoiceView }) => {
     };
 
     return (
-        <tr
-            onClick={() => {
-                setInvoiceView(invoice._id);
-            }}
-            className='cursor-pointer'
-        >
-            <td className='p-2 rounded-l-lg bg-gray-800'>
+        <tr className='cursor-pointer'>
+            <td
+                onClick={() => {
+                    setInvoiceView(invoice._id);
+                }}
+                className='p-2 rounded-l-lg bg-gray-800'
+            >
                 <div className='flex align-items-center'>
                     <Gravatar
                         email={invoice.clientEmail}
@@ -33,11 +36,24 @@ const Invoice = ({ invoice, setInvoiceView }) => {
                     </div>
                 </div>
             </td>
-            <td className='p-2 bg-gray-800'>{`#${invoice.invoiceNo}`}</td>
-            <td className='p-2 bg-gray-800 font-bold'>{`₹${
-                invoice.itemList.length && netAmount(invoice.itemList)
-            }`}</td>
-            <td className='p-2 bg-gray-800'>
+            <td
+                onClick={() => {
+                    setInvoiceView(invoice._id);
+                }}
+                className='p-2 bg-gray-800'
+            >{`#${invoice.invoiceNo}`}</td>
+            <td
+                onClick={() => {
+                    setInvoiceView(invoice._id);
+                }}
+                className='p-2 bg-gray-800 font-bold'
+            >{`₹${invoice.itemList.length && netAmount(invoice.itemList)}`}</td>
+            <td
+                onClick={() => {
+                    setInvoiceView(invoice._id);
+                }}
+                className='p-2 bg-gray-800'
+            >
                 <span
                     className={`${
                         invoice.status === 'overdue'
@@ -50,7 +66,12 @@ const Invoice = ({ invoice, setInvoiceView }) => {
                     {invoice.status}
                 </span>
             </td>
-            <td className='p-2 rounded-r-lg bg-gray-800'>
+            <td
+                onClick={() => {
+                    setInvoiceView(invoice._id);
+                }}
+                className='p-2 bg-gray-800'
+            >
                 <div className='flex items-center'>
                     <span className='mr-6'>
                         {moment(invoice.invoiceDate).format('MMM D, YYYY')}
@@ -61,6 +82,23 @@ const Invoice = ({ invoice, setInvoiceView }) => {
                     </span>
                 </div>
             </td>
+            <td className='p-2 rounded-r-lg bg-gray-800'>
+                <div className='flex justify-start items-center'>
+                    <RiEdit2Line
+                        onClick={() => setInvoiceModal(true)}
+                        className='mr-5 hover:text-yellow-400 transition-colors duration-100'
+                        size={20}
+                    />
+                    <RiDeleteBin2Line
+                        className='hover:text-red-400 transition-colors duration-100'
+                        size={20}
+                        onClick={() => deleteItem(invoice._id)}
+                    />
+                </div>
+            </td>
+            {invoiceModal && (
+                <CreateInvoice {...{ setInvoiceModal, edit: true }} />
+            )}
         </tr>
     );
 };

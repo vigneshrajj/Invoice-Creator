@@ -11,8 +11,10 @@ const CreateInvoice = ({
     getAllInvoices,
     getStats,
     pageNo,
+    edit,
+    sendAgain,
 }) => {
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(sendAgain ? 2 : 1);
     const [isNextDisabled, setIsNextDisabled] = useState(true);
     const [formData, setFormData] = useState({});
     const submitForm = (formData) => {
@@ -41,26 +43,31 @@ const CreateInvoice = ({
                         getAllInvoices,
                         getStats,
                         pageNo,
+                        edit,
+                        sendAgain,
                     }}
                 />
                 <div className='footer absolute bottom-0 left-0 w-full flex justify-between mb-4 px-3 items-center'>
                     <p className='page-name text-lg'>
                         {page === 1
-                            ? 'User details'
-                            : page === 2
                             ? 'Client details'
+                            : page === 2
+                            ? 'User details'
                             : page === 3
                             ? 'Invoice details'
                             : 'Product details'}
                     </p>
                     <div className='page-indication flex justify-between w-14'>
-                        <div
-                            className='indicator h-1.5 w-1.5 bg-gray-400 rounded-full'
-                            style={{
-                                outline:
-                                    page === 1 && '3px solid rgba(30, 58, 138)',
-                            }}
-                        />
+                        {!sendAgain && (
+                            <div
+                                className='indicator h-1.5 w-1.5 bg-gray-400 rounded-full'
+                                style={{
+                                    outline:
+                                        page === 1 &&
+                                        '3px solid rgba(30, 58, 138)',
+                                }}
+                            />
+                        )}
                         <div
                             className='indicator h-1.5 w-1.5 bg-gray-400 rounded-full'
                             style={{
@@ -89,7 +96,7 @@ const CreateInvoice = ({
                                 setPage(page - 1);
                                 setIsNextDisabled(false);
                             }}
-                            disabled={page <= 1}
+                            disabled={page <= 1 || (sendAgain && page <= 2)}
                             className='bg-blue-800 hover:bg-blue-900 disabled:bg-gray-900 disabled:cursor-default transition-colors duration-100 px-1 py-2 mr-3 rounded text-lg'
                         >
                             <GoChevronLeft />

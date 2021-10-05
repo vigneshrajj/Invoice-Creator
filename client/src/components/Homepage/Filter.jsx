@@ -35,7 +35,7 @@ const FilterOption = ({ children }) => (
 
 const Filter = () => (
     <div class='group inline-block'>
-        <button class='outline-none focus:outline-none text-white px-3 py-1 bg-gray-800 rounded-sm flex items-center min-w-32'>
+        <button class='outline-none focus:outline-none text-white px-3 py-1 h-full bg-gray-800 rounded-sm flex items-center min-w-32'>
             <span class='pr-1 font-semibold flex-1'>Filters</span>
             <span>
                 <svg

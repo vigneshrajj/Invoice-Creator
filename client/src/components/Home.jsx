@@ -43,7 +43,7 @@ const Home = ({
                     className='header w-full h-12 m-2 grid gap-x-3'
                     style={{ gridTemplateColumns: '4rem auto 3.5rem' }}
                 >
-                    <div className='logo bg-gray-800 w-12 rounded-full ml-2 text-center leading-normal text-3xl text-white select-none'>
+                    <div className='logo bg-gray-900 w-12 rounded-full ml-2 text-center leading-normal text-3xl text-white select-none font-bold'>
                         I
                     </div>
                     <div className='heading text-gray-300'>

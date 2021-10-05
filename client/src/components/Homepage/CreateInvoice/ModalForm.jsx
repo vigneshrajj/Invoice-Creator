@@ -12,6 +12,8 @@ const ModalForm = ({
     getAllInvoices,
     getStats,
     pageNo,
+    invoiceNo,
+    sendAgain,
 }) => {
     const [userDetails, setUserDetails] = useState({
         fromAddress: '',
@@ -55,11 +57,12 @@ const ModalForm = ({
     ]);
 
     useEffect(() => {
-        if (page > 4) {
+        if (page > 4 && !invoiceNo) {
             submitForm();
             getAllInvoices({ pageNo, itemsCount: 3 });
             getStats();
             setInvoiceModal(false);
+        } else if (page > 4) {
         }
     }, [page]);
 
@@ -67,23 +70,23 @@ const ModalForm = ({
         switch (page) {
             case 1:
                 if (
-                    e.target.id === 'fromZip' &&
-                    !(e.target.value === '' || rexp.test(e.target.value))
-                )
-                    break;
-                setUserDetails({
-                    ...userDetails,
-                    [e.target.id]: e.target.value,
-                });
-                break;
-            case 2:
-                if (
                     e.target.id === 'toZip' &&
                     !(e.target.value === '' || rexp.test(e.target.value))
                 )
                     break;
                 setClientDetails({
                     ...clientDetails,
+                    [e.target.id]: e.target.value,
+                });
+                break;
+            case 2:
+                if (
+                    e.target.id === 'fromZip' &&
+                    !(e.target.value === '' || rexp.test(e.target.value))
+                )
+                    break;
+                setUserDetails({
+                    ...userDetails,
                     [e.target.id]: e.target.value,
                 });
                 break;
@@ -112,15 +115,15 @@ const ModalForm = ({
 
     const isNextDisabled = () => {
         if (page === 1) {
-            for (let key in userDetails) {
-                if (userDetails[key] === '' || !userDetails[key]) {
+            for (let key in clientDetails) {
+                if (clientDetails[key] === '' || !clientDetails[key]) {
                     return true;
                 }
             }
             return false;
         } else if (page === 2) {
-            for (let key in clientDetails) {
-                if (clientDetails[key] === '' || !clientDetails[key]) {
+            for (let key in userDetails) {
+                if (userDetails[key] === '' || !userDetails[key]) {
                     return true;
                 }
             }
@@ -188,7 +191,7 @@ const ModalForm = ({
     };
 
     switch (page) {
-        case 1:
+        case 2:
             return (
                 <div className='form mx-2'>
                     <input
@@ -227,7 +230,7 @@ const ModalForm = ({
                     </div>
                 </div>
             );
-        case 2:
+        case 1:
             return (
                 <div className='form mx-2'>
                     <div className='flex justify-between mb-5'>

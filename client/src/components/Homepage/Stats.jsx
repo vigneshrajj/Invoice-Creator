@@ -17,13 +17,21 @@ const CardData = ({ innerText, cardType }) => {
         delay: 100,
         config: config.mollases,
     });
-    return (
-        <p className='text-lg mb-2' style={{ color: '#00C49A' }}>
-            {cardType === 'revenue' && <span>₹</span>}
-            <animated.span>{number.to((n) => n.toFixed(0))}</animated.span>
-            {cardType === 'loyalty' && <span>%</span>}
-        </p>
-    );
+    if (innerText) {
+        return (
+            <p className='text-lg mb-2' style={{ color: '#00C49A' }}>
+                {cardType === 'revenue' && <span>₹</span>}
+                <animated.span>{number.to((n) => n.toFixed(0))}</animated.span>
+                {cardType === 'loyalty' && <span>%</span>}
+            </p>
+        );
+    } else {
+        return (
+            <p className='text-lg mb-2' style={{ color: '#00C49A' }}>
+                No data
+            </p>
+        );
+    }
 };
 
 const Stats = ({ statInvoices, chartData }) => {

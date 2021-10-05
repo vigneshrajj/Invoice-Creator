@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Invoice from './Invoice';
 import InvoiceView from './InvoiceView';
 import { connect } from 'react-redux';
-import { getInvoice } from '../../redux/Invoice/invoice.asyncActions';
+import {
+    getInvoice,
+    deleteInvoice,
+} from '../../redux/Invoice/invoice.asyncActions';
 
 const InvoiceTable = ({
     invoices,
@@ -11,6 +14,7 @@ const InvoiceTable = ({
     setPageNo,
     getAllInvoices,
     getInvoice,
+    deleteInvoice,
     currentInvoice,
 }) => {
     const [invoiceView, setInvoiceView] = useState(null);
@@ -28,8 +32,13 @@ const InvoiceTable = ({
         setPageNo(pageNo + 1);
     };
 
-    const prevPage = async () => {
+    const prevPage = () => {
         setPageNo(pageNo - 1);
+    };
+
+    const deleteItem = async (id) => {
+        await deleteInvoice(id);
+        getAllInvoices({ pageNo: 1, itemsCount: 3 });
     };
 
     return (
@@ -56,21 +65,34 @@ const InvoiceTable = ({
                             <th className='p-2 text-left bg-gray-800'>
                                 Status
                             </th>
+                            <th className='p-2 text-left bg-gray-800'>Date</th>
                             <th className='p-2 rounded-r-lg text-left bg-gray-800'>
-                                Date
+                                Actions
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        {invoices.length &&
+                        {invoices.length ? (
                             invoices.map((invoice, index) => {
                                 return (
                                     <Invoice
                                         key={index}
-                                        {...{ invoice, setInvoiceView }}
+                                        {...{
+                                            invoice,
+                                            setInvoiceView,
+                                            deleteItem,
+                                        }}
                                     />
                                 );
-                            })}
+                            })
+                        ) : (
+                            <td
+                                className='w-full h-12 bg-gray-800 text-center font-bold rounded-lg'
+                                colspan={6}
+                            >
+                                No data found
+                            </td>
+                        )}
                     </tbody>
                 </table>
                 <div className='pagination flex justify-end'>
@@ -114,6 +136,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         getInvoice: (payload) => dispatch(getInvoice(payload)),
+        deleteInvoice: (payload) => dispatch(deleteInvoice(payload)),
     };
 };
 

@@ -58,3 +58,21 @@ export const getStats = () => async (dispatch) => {
         dispatch({ type: ACTION_FAILURE, payload: err.response.data.error });
     }
 };
+
+export const editInvoice = (payload) => async (dispatch) => {
+    try {
+        const res = await instance.patch('/' + payload.id, {
+            updatedValues: payload.updatedValues,
+        });
+    } catch (err) {
+        dispatch({ type: ACTION_FAILURE, payload: err.response.data.error });
+    }
+};
+
+export const deleteInvoice = (payload) => async (dispatch) => {
+    try {
+        const res = await instance.delete('/' + payload);
+    } catch (err) {
+        dispatch({ type: ACTION_FAILURE, payload: err.response.data.error });
+    }
+};

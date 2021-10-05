@@ -7,17 +7,18 @@ const cookieParser = require('cookie-parser');
 
 const app = express();
 app.use(express.json());
-app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 app.use(cookieParser());
 
 const PORT = process.env.PORT || 3001;
 
-mongoose.connect(process.env.MONGO_URL)
+mongoose
+    .connect(process.env.MONGO_URL)
     .then(() => {
         app.listen(PORT, (req, res) => {
             console.log(`Server running at port ${PORT}`);
-        })
+        });
     })
-    .catch((err) => console.log("database not connected"));
+    .catch((err) => console.log('database not connected'));
 
 app.use('/api', router);
