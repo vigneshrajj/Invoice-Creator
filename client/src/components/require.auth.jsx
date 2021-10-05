@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 export default (ChildComponent) => {
 
     const isAuth = async () => {
-        const res = await axios.get('http://localhost:3001/api/auth-check', {
+        const res = await axios.get('https://invoice-app-vignesh.herokuapp.com/api/auth-check', {
             headers: {
                 'content-type': 'application/json'
             },

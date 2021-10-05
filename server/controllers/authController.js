@@ -54,7 +54,7 @@ module.exports = {
                 isSocial: false,
             });
             const token = createToken(user._id);
-            res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
+            res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000, sameSite: true, secure: true });
             res.status(201).json({ user: user._id });
         } catch (err) {
             const errors = handleErrors(err);
@@ -67,7 +67,7 @@ module.exports = {
         try {
             const user = await User.login(email, password);
             const token = createToken(user._id);
-            res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
+            res.cookie('jwt', token, { httpOnly: true, secure: true, maxAge: maxAge * 1000, sameSite: true });
             res.status(200).json({ user: user._id });
         } catch (err) {
             const errors = handleErrors(err);
@@ -89,6 +89,7 @@ module.exports = {
                     res.cookie('jwt', token, {
                         httpOnly: true,
                         maxAge: maxAge * 1000,
+                        sameSite: true, secure: true
                     });
                     res.status(200).json({ user: user._id });
                 } else {
@@ -103,6 +104,7 @@ module.exports = {
                     res.cookie('jwt', token, {
                         httpOnly: true,
                         maxAge: maxAge * 1000,
+                        sameSite: true, secure: true
                     });
                     res.status(201).json({ user: user._id });
                 }
@@ -110,8 +112,7 @@ module.exports = {
         });
     },
     logout: (req, res) => {
-        res.header('Access-Control-Allow-Origin', 'https://invoice-app-vignesh.netlify.app');
-        res.cookie('jwt', '', { httpOnly: true, maxAge: 1 });
+        res.cookie('jwt', '', { httpOnly: true, maxAge: 1, sameSite: true, secure: true });
         res.status(200).send({ message: 'logged out' });
     },
     authCheck: (req, res) => {
