@@ -67,7 +67,7 @@ module.exports = {
         try {
             const user = await User.login(email, password);
             const token = createToken(user._id);
-            res.cookie('jwt', token, { httpOnly: true, secure: true, maxAge: maxAge * 1000, sameSite: false });
+            res.cookie('jwt', token, { httpOnly: true, secure: true, maxAge: maxAge * 1000, sameSite: 'None' });
             res.status(200).json({ user: user._id });
         } catch (err) {
             const errors = handleErrors(err);
