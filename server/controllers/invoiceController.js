@@ -220,6 +220,28 @@ module.exports = {
             res.status(200).json({ invoices: [] });
         }
     },
+    applyFilters: async (req, res) => {
+        try {
+            const { user } = req;
+            const { status, dateAdded } = req.query;
+            let invoices = [];
+            if (status) {
+                invoices = await Invoice.find({ user, status });
+            } else {
+                invoices = await Invoice.find({
+                    user,
+                    invoiceDate: {
+                        $gte: new Date(
+                            Date.now() - dateAdded * 24 * 60 * 60 * 1000
+                        ),
+                    },
+                });
+            }
+            res.status(200).json({ invoices });
+        } catch (err) {
+            res.status(400).json('Unable to fetch clients: ', err);
+        }
+    },
     getClients: async (req, res) => {
         try {
             const { user } = req;

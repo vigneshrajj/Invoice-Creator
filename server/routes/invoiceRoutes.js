@@ -11,6 +11,7 @@ router.get('/list', getUser, invoiceController.getAllInvoices);
 router.get('/search', getUser, invoiceController.searchInvoice);
 router.get('/stats', getUser, invoiceController.getStats);
 router.get('/clients', getUser, invoiceController.getClients);
+router.get('/filters', getUser, invoiceController.applyFilters);
 router.get('/:id', invoiceController.getInvoice);
 
 module.exports = router;

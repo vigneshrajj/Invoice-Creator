@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Transition, animated } from 'react-spring';
 import Gravatar from 'react-gravatar';
 import CreateInvoice from '../CreateInvoice/CreateInvoice';
 
@@ -13,14 +14,38 @@ const ClientCard = ({ client }) => {
                 <div className='img w-8 h-8 rounded-xl overflow-hidden mr-3'>
                     <Gravatar email={client.clientEmail} />
                 </div>
-                <div>
-                    <p className='font-bold capitalize'>{client.clientName}</p>
-                    <p>{client.clientEmail}</p>
+                <div className='max-w-3/5 overflow-hidden'>
+                    <p className='font-bold capitalize overflow-hidden whitespace-nowrap overflow-ellipsis'>
+                        {client.clientName}
+                    </p>
+                    <p className='w-full overflow-hidden whitespace-nowrap overflow-ellipsis'>
+                        {client.clientEmail}
+                    </p>
                 </div>
             </div>
-            {invoiceModal && (
-                <CreateInvoice {...{ sendAgain: client, setInvoiceModal }} />
-            )}
+            <Transition
+                items={invoiceModal}
+                from={{ opacity: 0 }}
+                enter={{ opacity: 1 }}
+                leave={{ opacity: 0 }}
+            >
+                {(styles, item) => {
+                    return (
+                        item && (
+                            <animated.div
+                                style={{
+                                    ...styles,
+                                    zIndex: 20,
+                                }}
+                            >
+                                <CreateInvoice
+                                    {...{ sendAgain: client, setInvoiceModal }}
+                                />
+                            </animated.div>
+                        )
+                    );
+                }}
+            </Transition>
         </>
     );
 };

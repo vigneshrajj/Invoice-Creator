@@ -102,6 +102,7 @@ const InvoiceView = ({ setInvoiceView, currentInvoice }) => {
                         currentInvoice.itemList.map((item) => (
                             <div
                                 className='grid'
+                                key={item.name}
                                 style={{
                                     gridTemplateColumns: '50% 10% 20% 20%',
                                 }}

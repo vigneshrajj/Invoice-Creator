@@ -27,11 +27,13 @@ const Invoice = ({ invoice, setInvoiceView, deleteItem, getInvoice }) => {
                 <div className='flex align-items-center'>
                     <Gravatar
                         email={invoice.clientEmail}
-                        className='rounded-xl h-12 w-12  object-cover'
+                        className='rounded-xl h-12 w-12  object-cover sm:h-10 sm:w-10'
                     />
-                    <div className='ml-3'>
-                        <div className='name'>{invoice.clientName}</div>
-                        <div className='text-gray-500'>
+                    <div className='ml-3 w-full overflow-hidden'>
+                        <div className='name overflow-hidden whitespace-nowrap overflow-ellipsis'>
+                            {invoice.clientName}
+                        </div>
+                        <div className='text-gray-500 overflow-hidden whitespace-nowrap overflow-ellipsis'>
                             {invoice.clientEmail}
                         </div>
                     </div>
@@ -53,7 +55,7 @@ const Invoice = ({ invoice, setInvoiceView, deleteItem, getInvoice }) => {
                 onClick={() => {
                     setInvoiceView(invoice._id);
                 }}
-                className='p-2 bg-gray-800'
+                className='p-2 bg-gray-800 md:hidden'
             >
                 <span
                     className={`${
@@ -71,7 +73,7 @@ const Invoice = ({ invoice, setInvoiceView, deleteItem, getInvoice }) => {
                 onClick={() => {
                     setInvoiceView(invoice._id);
                 }}
-                className='p-2 bg-gray-800'
+                className='p-2 bg-gray-800 sm:hidden'
             >
                 <div className='flex items-center'>
                     <span className='mr-6'>

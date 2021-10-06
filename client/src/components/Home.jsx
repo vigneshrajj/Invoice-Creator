@@ -9,6 +9,7 @@ import {
     getAllInvoices,
     searchInvoice,
     getClients,
+    applyFilter,
 } from '../redux/Invoice/invoice.asyncActions';
 import { HiOutlineLogout } from 'react-icons/hi';
 import { TiDocumentAdd } from 'react-icons/ti';
@@ -30,6 +31,7 @@ const Home = ({
     searchResults,
     statInvoices,
     chartData,
+    applyFilter,
 }) => {
     const [pageNo, setPageNo] = useState(1);
     const [invoiceModal, setInvoiceModal] = useState(false);
@@ -51,8 +53,8 @@ const Home = ({
     };
 
     return (
-        <div className='overflow-hidden'>
-            <div className='w-full h-screen flex flex-col items-center bg-gray-700'>
+        <div className='overflow-hidden md:overflow-y-scroll'>
+            <div className='w-full h-screen flex flex-col items-center bg-gray-700 md:h-full'>
                 <div
                     className='header w-full h-12 m-2 grid gap-x-3'
                     style={{ gridTemplateColumns: '4rem auto 3.5rem' }}
@@ -82,10 +84,10 @@ const Home = ({
                     >
                         <TiDocumentAdd />
                     </button>
-                    <Filter />
+                    <Filter applyFilter={applyFilter} />
                     <div className='px-2 flex justify-between rounded bg-gray-300 w-full'>
                         <input
-                            className='flex-grow outline-none text-gray-600 bg-gray-300'
+                            className='flex-grow outline-none text-gray-600 bg-gray-300 w-full'
                             type='text'
                             placeholder='Search Invoice...'
                             value={searchQuery}
@@ -155,10 +157,10 @@ const Home = ({
                         ''
                     ) : (
                         <>
-                            <div className='card bg-gray-800 rounded col-span-3 pt-8 flex relative'>
+                            <div className='card bg-gray-800 rounded col-span-3 pt-3 flex relative md:col-span-4 sm:flex-col sm:mb-5 sm:px-2'>
                                 <Stats {...{ statInvoices, chartData }} />
                             </div>
-                            <div className='card bg-gray-800 rounded text-gray-300'>
+                            <div className='card bg-gray-800 rounded text-gray-300 md:col-span-4 md:mb-2'>
                                 <Clients {...{ getClients, clients }} />
                             </div>
                         </>
@@ -185,6 +187,7 @@ const mapDispatchToProps = (dispatch) => {
         getAllInvoices: (payload) => dispatch(getAllInvoices(payload)),
         searchInvoice: (payload) => dispatch(searchInvoice(payload)),
         getClients: (payload) => dispatch(getClients(payload)),
+        applyFilter: (payload) => dispatch(applyFilter(payload)),
     };
 };
 

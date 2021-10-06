@@ -91,10 +91,24 @@ export const searchInvoice = (payload) => async (dispatch) => {
     }
 };
 
-export const getClients = (payload) => async (dispatch) => {
+export const getClients = () => async (dispatch) => {
     try {
         const res = await instance.get('/clients');
         dispatch({ type: GET_ALL_CLIENTS, payload: res.data.clients });
+    } catch (err) {
+        dispatch({ type: ACTION_FAILURE, payload: err.response.data.error });
+    }
+};
+
+export const applyFilter = (payload) => async (dispatch) => {
+    try {
+        const res = await instance.get('/filters', {
+            params: {
+                status: payload.status && payload.status,
+                dateAdded: payload.dateAdded && payload.dateAdded,
+            },
+        });
+        dispatch({ type: SEARCH_INVOICE, payload: res.data.invoices });
     } catch (err) {
         dispatch({ type: ACTION_FAILURE, payload: err.response.data.error });
     }

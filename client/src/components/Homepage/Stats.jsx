@@ -124,83 +124,96 @@ const Stats = ({ statInvoices, chartData }) => {
 
     return (
         <>
-            <p className='absolute text-white left-52 top-2 text-md font-bold text-gray-300'>
-                Monthly income
-            </p>
-            <ResponsiveContainer width='100%' height='100%'>
-                <AreaChart data={calculatedData}>
-                    <defs>
-                        <linearGradient
-                            id='colorEarning'
-                            x1='0'
-                            y1='0'
-                            x2='0'
-                            y2='1'
-                        >
-                            <stop
-                                offset='5%'
-                                stopColor='rgba(37, 99, 235)'
-                                stopOpacity={0.8}
-                            />
-                            <stop
-                                offset='95%'
-                                stopColor='rgba(37, 99, 235)'
-                                stopOpacity={0}
-                            />
-                        </linearGradient>
-                    </defs>
-                    <Area
-                        type='monotone'
-                        dataKey='Revenue'
-                        stroke='rgba(37, 99, 235)'
-                        fillOpacity={1}
-                        fill='url(#colorEarning)'
-                        dot={{ fill: '#fff' }}
-                    />
-                    <XAxis
-                        dataKey='Month'
-                        stroke='rgba(156, 163, 175)'
-                        style={{ fontSize: 15 }}
-                    />
-                    <YAxis
-                        style={{ fontSize: 15 }}
-                        stroke='rgba(156, 163, 175)'
-                    />
-                    <Tooltip />
-                </AreaChart>
-            </ResponsiveContainer>
+            <div className='h-full w-full lg:w-1/2 sm:w-full flex flex-col justify-start items-center mb-8'>
+                <p className='text-white text-md font-bold text-gray-300'>
+                    Monthly income
+                </p>
+                <ResponsiveContainer
+                    width='100%'
+                    height={200}
+                    className='h-full'
+                >
+                    <AreaChart data={calculatedData}>
+                        <defs>
+                            <linearGradient
+                                id='colorEarning'
+                                x1='0'
+                                y1='0'
+                                x2='0'
+                                y2='1'
+                            >
+                                <stop
+                                    offset='5%'
+                                    stopColor='rgba(37, 99, 235)'
+                                    stopOpacity={0.8}
+                                />
+                                <stop
+                                    offset='95%'
+                                    stopColor='rgba(37, 99, 235)'
+                                    stopOpacity={0}
+                                />
+                            </linearGradient>
+                        </defs>
+                        <Area
+                            type='monotone'
+                            dataKey='Revenue'
+                            stroke='rgba(37, 99, 235)'
+                            fillOpacity={1}
+                            fill='url(#colorEarning)'
+                            dot={{ fill: '#fff' }}
+                        />
+                        <XAxis
+                            dataKey='Month'
+                            stroke='rgba(156, 163, 175)'
+                            style={{ fontSize: 15 }}
+                        />
+                        <YAxis
+                            style={{ fontSize: 15 }}
+                            stroke='rgba(156, 163, 175)'
+                        />
+                        <Tooltip />
+                    </AreaChart>
+                </ResponsiveContainer>
+            </div>
 
             <div className='p-2 w-full text-center text-gray-400 grid grid-cols-2 gap-2 grid-rows-2'>
                 <div className='detail-card rounded-xl shadow-xl flex flex-col justify-center items-center'>
-                    <p className='font-bold text-2xl'>Total revenue</p>
-                    <CardData innerText={stats.revenue} cardType='revenue' />
+                    <p className='font-bold text-2xl md:text-lg'>
+                        Total revenue
+                    </p>
+                    <span className='text-lg mb-2'>
+                        <CardData
+                            innerText={stats.revenue}
+                            cardType='revenue'
+                        />
+                    </span>
                 </div>
                 <div className='detail-card rounded-xl shadow-xl flex flex-col justify-center items-center'>
-                    <p className='font-bold text-2xl'>Clients</p>
-                    <p className='text-lg mb-2' style={{ color: '#00C49A' }}>
+                    <p className='font-bold text-2xl md:text-lg'>Clients</p>
+                    <span className='text-lg mb-2' style={{ color: '#00C49A' }}>
                         <CardData
                             innerText={stats.clients}
                             cardType='clients'
                         />
-                    </p>
+                    </span>
                 </div>
                 <div className='detail-card rounded-xl shadow-xl flex flex-col justify-center items-center'>
-                    <p className='font-bold text-2xl'>Loyalty</p>
-                    <p className='text-lg' style={{ color: '#00C49A' }}>
+                    <p className='font-bold text-2xl md:text-lg'>Loyalty</p>
+                    <span className='text-lg' style={{ color: '#00C49A' }}>
                         <CardData
                             innerText={stats.loyalty ? stats.loyalty : ''}
                             cardType='loyalty'
                         />
-                    </p>
+                    </span>
                 </div>
                 <div className='detail-card rounded-xl shadow-xl flex flex-col justify-center items-center'>
-                    <p className='font-bold text-2xl'>Invoices</p>
-                    <p className='text-lg' style={{ color: '#00C49A' }}>
+                    <p className='font-bold text-2xl md:text-lg'>Invoices</p>
+                    <span className='text-lg' style={{ color: '#00C49A' }}>
                         <CardData
                             innerText={stats.invoices}
                             cardType='invoices'
                         />
-                    </p>
+                    </span>
                 </div>
             </div>
         </>

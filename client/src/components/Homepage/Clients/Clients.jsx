@@ -8,12 +8,12 @@ const Clients = ({ getClients, clients }) => {
 
     return (
         <>
-            <div className='header flex justify-between items-center px-3 pt-3 pb-3'>
-                <p className='text-lg font-bold text-gray-300'>Send Again</p>
-            </div>
+            <p className='text-lg font-bold text-gray-300 p-3 sm:text-center'>
+                Send Again
+            </p>
             {clients &&
                 clients.map(({ data }, index) => (
-                    <ClientCard key={index} client={data[0]} />
+                    <ClientCard key={data[0].clientEmail} client={data[0]} />
                 ))}
         </>
     );

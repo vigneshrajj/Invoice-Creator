@@ -54,20 +54,22 @@ const InvoiceTable = ({
                 >
                     <thead className=' text-gray-500 select-none'>
                         <tr>
-                            <th className='p-2 rounded-l-lg bg-gray-800'>
+                            <th className='p-2 rounded-l-lg bg-gray-800 sm:text-sm'>
                                 Recipient
                             </th>
-                            <th className='p-2 text-left bg-gray-800'>
-                                Invoice No.
+                            <th className='p-2 text-left bg-gray-800 sm:text-sm'>
+                                ID
                             </th>
-                            <th className='p-2 text-left bg-gray-800'>
+                            <th className='p-2 text-left bg-gray-800 sm:text-sm'>
                                 Amount
                             </th>
-                            <th className='p-2 text-left bg-gray-800'>
+                            <th className='p-2 text-left bg-gray-800 md:hidden'>
                                 Status
                             </th>
-                            <th className='p-2 text-left bg-gray-800'>Date</th>
-                            <th className='p-2 rounded-r-lg text-left bg-gray-800'>
+                            <th className='p-2 text-left bg-gray-800 sm:hidden'>
+                                Date
+                            </th>
+                            <th className='p-2 rounded-r-lg text-left bg-gray-800 sm:text-sm'>
                                 Actions
                             </th>
                         </tr>
@@ -77,7 +79,7 @@ const InvoiceTable = ({
                             searchResults.map((invoice, index) => {
                                 return (
                                     <Invoice
-                                        key={index}
+                                        key={invoice._id}
                                         {...{
                                             getInvoice,
                                             invoice,
@@ -91,7 +93,7 @@ const InvoiceTable = ({
                             invoices.map((invoice, index) => {
                                 return (
                                     <Invoice
-                                        key={index}
+                                        key={invoice._id}
                                         {...{
                                             getInvoice,
                                             invoice,
