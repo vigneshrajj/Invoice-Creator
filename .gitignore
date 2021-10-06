@@ -10,3 +10,4 @@ client/gitt
 client/.env
 build
 client/build
+client/.env.production
