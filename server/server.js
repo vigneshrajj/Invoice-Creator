@@ -7,7 +7,15 @@ const cookieParser = require('cookie-parser');
 
 const app = express();
 app.use(express.json());
-app.use(cors({ credentials: true, origin: 'https://invoice-app-vignesh.netlify.app' }));
+app.use(
+    cors({
+        credentials: true,
+        origin:
+            process.env.NODE_ENV === 'production'
+                ? 'https://invoice-app-vignesh.netlify.app'
+                : 'http://localhost:3000',
+    })
+);
 app.use(cookieParser());
 
 const PORT = process.env.PORT || 3001;

@@ -9,7 +9,7 @@ import {
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: 'https://invoice-app-vignesh.herokuapp.com/api/invoice',
+    baseURL: import.meta.env.VITE_API_URL + '/api/invoice',
     withCredentials: true,
     headers: { 'Content-Type': 'application/json' },
 });
