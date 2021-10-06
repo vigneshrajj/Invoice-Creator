@@ -8,3 +8,5 @@ client/dist-ssr
 client/*.local
 client/gitt
 client/.env
+build
+client/build
