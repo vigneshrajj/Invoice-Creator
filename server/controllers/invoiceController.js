@@ -206,15 +206,59 @@ module.exports = {
     searchInvoice: (req, res) => {
         const { searchString } = req.query;
         const { user } = req;
+        if (searchString) {
+            Invoice.find({
+                $text: { $search: `"${user}" "${searchString}"` },
+            }).exec(function (err, invoices) {
+                if (err) {
+                    res.status(400).json({ error: 'No result' });
+                } else {
+                    res.status(200).json({ invoices });
+                }
+            });
+        } else {
+            res.status(200).json({ invoices: [] });
+        }
+    },
+    getClients: async (req, res) => {
+        try {
+            const { user } = req;
+            const clients = await Invoice.aggregate([
+                { $match: { user } },
+                {
+                    $group: {
+                        _id: {
+                            clientEmail: '$clientEmail',
+                            clientName: '$clientName',
+                            toAddress: '$toAddress',
+                            toCity: '$toCity',
+                            toZip: '$toZip',
+                            toCountry: '$toCountry',
+                        },
+                    },
+                },
+                {
+                    $group: {
+                        _id: {
+                            clientEmail: '$_id.clientEmail',
+                        },
+                        data: {
+                            $push: {
+                                clientEmail: '$_id.clientEmail',
+                                clientName: '$_id.clientName',
+                                toAddress: '$_id.toAddress',
+                                toCity: '$_id.toCity',
+                                toZip: '$_id.toZip',
+                                toCountry: '$_id.toCountry',
+                            },
+                        },
+                    },
+                },
+            ]).limit(3);
 
-        Invoice.find({
-            $text: { $search: `"${user}" "${searchString}"` },
-        }).exec(function (err, invoices) {
-            if (err) {
-                res.status(400).json({ error: 'No result' });
-            } else {
-                res.status(200).json({ invoices });
-            }
-        });
+            res.status(200).json({ clients });
+        } catch (err) {
+            res.status(400).json('Unable to fetch clients: ', err);
+        }
     },
 };

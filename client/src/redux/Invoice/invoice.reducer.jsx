@@ -4,6 +4,8 @@ import {
     GET_INVOICE_COUNT,
     GET_STATS,
     GET_CHART_DATA,
+    SEARCH_INVOICE,
+    GET_ALL_CLIENTS,
     ACTION_FAILURE,
 } from './invoice.types';
 
@@ -13,6 +15,8 @@ const INITIAL_STATE = {
     currentInvoice: {},
     statInvoices: [],
     chartData: [],
+    searchResults: [],
+    clients: [],
     error: '',
 };
 
@@ -42,6 +46,16 @@ const reducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 chartData: action.payload,
+            };
+        case SEARCH_INVOICE:
+            return {
+                ...state,
+                searchResults: action.payload,
+            };
+        case GET_ALL_CLIENTS:
+            return {
+                ...state,
+                clients: action.payload,
             };
         case ACTION_FAILURE:
             return {

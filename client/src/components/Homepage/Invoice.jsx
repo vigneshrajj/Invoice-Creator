@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import { Transition, animated } from 'react-spring';
 import { AiOutlineSwapRight } from 'react-icons/ai';
 import { RiEdit2Line, RiDeleteBin2Line } from 'react-icons/ri';
 import Gravatar from 'react-gravatar';
 import moment from 'moment';
 import CreateInvoice from './CreateInvoice/CreateInvoice';
 
-const Invoice = ({ invoice, setInvoiceView, deleteItem }) => {
+const Invoice = ({ invoice, setInvoiceView, deleteItem, getInvoice }) => {
     const [invoiceModal, setInvoiceModal] = useState(false);
     const netAmount = (arr) => {
         var price = 0;
@@ -85,7 +86,10 @@ const Invoice = ({ invoice, setInvoiceView, deleteItem }) => {
             <td className='p-2 rounded-r-lg bg-gray-800'>
                 <div className='flex justify-start items-center'>
                     <RiEdit2Line
-                        onClick={() => setInvoiceModal(true)}
+                        onClick={async () => {
+                            await getInvoice(invoice._id);
+                            setInvoiceModal(true);
+                        }}
                         className='mr-5 hover:text-yellow-400 transition-colors duration-100'
                         size={20}
                     />
@@ -96,9 +100,32 @@ const Invoice = ({ invoice, setInvoiceView, deleteItem }) => {
                     />
                 </div>
             </td>
-            {invoiceModal && (
-                <CreateInvoice {...{ setInvoiceModal, edit: true }} />
-            )}
+
+            <Transition
+                items={invoiceModal}
+                from={{ opacity: 0 }}
+                enter={{ opacity: 1 }}
+                leave={{ opacity: 0 }}
+            >
+                {(styles, item) => {
+                    return (
+                        item && (
+                            <animated.div
+                                style={{
+                                    ...styles,
+                                    position: 'relative',
+                                    zIndex: 20,
+                                }}
+                            >
+                                <CreateInvoice
+                                    edit={invoice._id}
+                                    setInvoiceModal={setInvoiceModal}
+                                />
+                            </animated.div>
+                        )
+                    );
+                }}
+            </Transition>
         </tr>
     );
 };

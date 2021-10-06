@@ -16,6 +16,7 @@ const InvoiceTable = ({
     getInvoice,
     deleteInvoice,
     currentInvoice,
+    searchResults,
 }) => {
     const [invoiceView, setInvoiceView] = useState(null);
     useEffect(async () => {
@@ -42,7 +43,7 @@ const InvoiceTable = ({
     };
 
     return (
-        <div className='col-span-12 w-full'>
+        <div className='col-span-12 w-full overflow-y-scroll'>
             <div
                 className='overflow-auto lg:overflow-visible flex flex-col justify-between'
                 style={{ minHeight: 300 }}
@@ -72,12 +73,27 @@ const InvoiceTable = ({
                         </tr>
                     </thead>
                     <tbody>
-                        {invoices.length ? (
+                        {searchResults && searchResults.length ? (
+                            searchResults.map((invoice, index) => {
+                                return (
+                                    <Invoice
+                                        key={index}
+                                        {...{
+                                            getInvoice,
+                                            invoice,
+                                            setInvoiceView,
+                                            deleteItem,
+                                        }}
+                                    />
+                                );
+                            })
+                        ) : invoices ? (
                             invoices.map((invoice, index) => {
                                 return (
                                     <Invoice
                                         key={index}
                                         {...{
+                                            getInvoice,
                                             invoice,
                                             setInvoiceView,
                                             deleteItem,
@@ -95,24 +111,26 @@ const InvoiceTable = ({
                         )}
                     </tbody>
                 </table>
-                <div className='pagination flex justify-end'>
-                    <ul className='flex pl-0 divide-x divide-gray-900 list-none rounded'>
-                        <button
-                            onClick={prevPage}
-                            disabled={pageNo <= 1}
-                            className='block py-1 px-3 leading-tight bg-gray-800 text-white cursor-pointer select-none ml-0 rounded-l-lg hover:bg-gray-900 disabled:bg-gray-900 disabled:text-gray-400 disabled:cursor-default transition-colors duration-100'
-                        >
-                            Previous
-                        </button>
-                        <button
-                            onClick={nextPage}
-                            disabled={pageNo >= invoiceCount / 3}
-                            className='block py-1 px-3 leading-tight bg-gray-800 text-white cursor-pointer select-none rounded-r-lg hover:bg-gray-900 disabled:bg-gray-900 disabled:text-gray-400 disabled:cursor-default transition-colors duration-100'
-                        >
-                            Next
-                        </button>
-                    </ul>
-                </div>
+                {!searchResults && (
+                    <div className='pagination flex justify-end'>
+                        <ul className='flex pl-0 divide-x divide-gray-900 list-none rounded'>
+                            <button
+                                onClick={prevPage}
+                                disabled={pageNo <= 1}
+                                className='block py-1 px-3 leading-tight bg-gray-800 text-white cursor-pointer select-none ml-0 rounded-l-lg hover:bg-gray-900 disabled:bg-gray-900 disabled:text-gray-400 disabled:cursor-default transition-colors duration-100'
+                            >
+                                Previous
+                            </button>
+                            <button
+                                onClick={nextPage}
+                                disabled={pageNo >= invoiceCount / 3}
+                                className='block py-1 px-3 leading-tight bg-gray-800 text-white cursor-pointer select-none rounded-r-lg hover:bg-gray-900 disabled:bg-gray-900 disabled:text-gray-400 disabled:cursor-default transition-colors duration-100'
+                            >
+                                Next
+                            </button>
+                        </ul>
+                    </div>
+                )}
             </div>
             {invoiceView && currentInvoice && (
                 <InvoiceView

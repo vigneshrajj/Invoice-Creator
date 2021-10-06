@@ -10,6 +10,7 @@ router.delete('/:id', invoiceController.deleteInvoice);
 router.get('/list', getUser, invoiceController.getAllInvoices);
 router.get('/search', getUser, invoiceController.searchInvoice);
 router.get('/stats', getUser, invoiceController.getStats);
+router.get('/clients', getUser, invoiceController.getClients);
 router.get('/:id', invoiceController.getInvoice);
 
 module.exports = router;

@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { createInvoice } from '../../../redux/Invoice/invoice.asyncActions';
+import {
+    createInvoice,
+    editInvoice,
+    getInvoice,
+} from '../../../redux/Invoice/invoice.asyncActions';
 import { FaDotCircle } from 'react-icons/fa';
 import { IoIosCloseCircle, IoIosCheckmarkCircle } from 'react-icons/io';
 
@@ -9,41 +13,110 @@ const ModalForm = ({
     setIsNextDisabled,
     createInvoice,
     setInvoiceModal,
+    getInvoice,
     getAllInvoices,
     getStats,
-    pageNo,
-    invoiceNo,
+    edit,
     sendAgain,
+    editInvoice,
+    currentInvoice,
 }) => {
     const [userDetails, setUserDetails] = useState({
-        fromAddress: '',
-        fromCity: '',
-        fromZip: '',
-        fromCountry: '',
+        fromAddress:
+            edit && currentInvoice && currentInvoice.fromAddress
+                ? currentInvoice.fromAddress
+                : '',
+        fromCity:
+            edit && currentInvoice && currentInvoice.fromCity
+                ? currentInvoice.fromCity
+                : '',
+        fromZip:
+            edit && currentInvoice && currentInvoice.fromZip
+                ? currentInvoice.fromZip
+                : '',
+        fromCountry:
+            edit && currentInvoice && currentInvoice.fromCountry
+                ? currentInvoice.fromCountry
+                : '',
     });
     const [clientDetails, setClientDetails] = useState({
-        clientName: '',
-        clientEmail: '',
-        toAddress: '',
-        toCity: '',
-        toZip: '',
-        toCountry: '',
+        clientName:
+            edit && currentInvoice && currentInvoice.clientName
+                ? currentInvoice.clientName
+                : sendAgain && sendAgain.clientName
+                ? sendAgain.clientName
+                : '',
+        clientEmail:
+            edit && currentInvoice && currentInvoice.clientEmail
+                ? currentInvoice.clientEmail
+                : sendAgain && sendAgain.clientEmail
+                ? sendAgain.clientEmail
+                : '',
+        toAddress:
+            edit && currentInvoice && currentInvoice.toAddress
+                ? currentInvoice.toAddress
+                : sendAgain && sendAgain.toAddress
+                ? sendAgain.toAddress
+                : '',
+        toCity:
+            edit && currentInvoice && currentInvoice.toCity
+                ? currentInvoice.toCity
+                : sendAgain && sendAgain.toCity
+                ? sendAgain.toCity
+                : '',
+        toZip:
+            edit && currentInvoice && currentInvoice.toZip
+                ? currentInvoice.toZip
+                : sendAgain && sendAgain.toZip
+                ? sendAgain.toZip
+                : '',
+        toCountry:
+            edit && currentInvoice && currentInvoice.toCountry
+                ? currentInvoice.toCountry
+                : sendAgain && sendAgain.toCountry
+                ? sendAgain.toCountry
+                : '',
     });
     const [invoiceDetails, setInvoiceDetails] = useState({
-        status: 'pending',
-        invoiceDate: '',
-        paymentDue: '',
+        status:
+            edit && currentInvoice && currentInvoice.status
+                ? currentInvoice.status
+                : 'pending',
+        invoiceDate:
+            edit && currentInvoice && currentInvoice.invoiceDate
+                ? currentInvoice.invoiceDate
+                : '',
+        paymentDue:
+            edit && currentInvoice && currentInvoice.paymentDue
+                ? currentInvoice.paymentDue
+                : '',
     });
-    const [productDescription, setProductDescription] = useState('');
-    const [itemList, setItemList] = useState([
-        {
-            name: '',
-            qty: 0,
-            price: '',
-        },
-    ]);
+    const [productDescription, setProductDescription] = useState(
+        edit && currentInvoice && currentInvoice.productDescription
+            ? currentInvoice.productDescription
+            : ''
+    );
+    const [itemList, setItemList] = useState(
+        edit && currentInvoice && currentInvoice.itemList
+            ? currentInvoice.itemList
+            : [
+                  {
+                      name: '',
+                      qty: 0,
+                      price: '',
+                  },
+              ]
+    );
+
+    const [editedValues, setEditedValues] = useState({});
 
     const rexp = /^[0-9\b]+$/;
+
+    useEffect(async () => {
+        if (edit) {
+            await getInvoice(edit);
+        }
+    }, []);
 
     useEffect(() => {
         setIsNextDisabled(isNextDisabled());
@@ -57,12 +130,14 @@ const ModalForm = ({
     ]);
 
     useEffect(() => {
-        if (page > 4 && !invoiceNo) {
+        if (page > 4 && !edit) {
             submitForm();
-            getAllInvoices({ pageNo, itemsCount: 3 });
+            getAllInvoices({ pageNo: 1, itemsCount: 3 });
             getStats();
             setInvoiceModal(false);
         } else if (page > 4) {
+            submitEditedValues();
+            setInvoiceModal(false);
         }
     }, [page]);
 
@@ -78,6 +153,10 @@ const ModalForm = ({
                     ...clientDetails,
                     [e.target.id]: e.target.value,
                 });
+                setEditedValues({
+                    ...editedValues,
+                    [e.target.id]: e.target.value,
+                });
                 break;
             case 2:
                 if (
@@ -87,6 +166,10 @@ const ModalForm = ({
                     break;
                 setUserDetails({
                     ...userDetails,
+                    [e.target.id]: e.target.value,
+                });
+                setEditedValues({
+                    ...editedValues,
                     [e.target.id]: e.target.value,
                 });
                 break;
@@ -99,15 +182,27 @@ const ModalForm = ({
                         ...invoiceDetails,
                         [e.target.id]: Date(e.target.value),
                     });
+                    setEditedValues({
+                        ...editedValues,
+                        [e.target.id]: Date(e.target.value),
+                    });
                 }
                 setInvoiceDetails({
                     ...invoiceDetails,
+                    [e.target.id]: e.target.value,
+                });
+                setEditedValues({
+                    ...editedValues,
                     [e.target.id]: e.target.value,
                 });
                 break;
             default:
                 if (e.target.id === 'productDescription') {
                     setProductDescription(e.target.value);
+                    setEditedValues({
+                        ...editedValues,
+                        [e.target.id]: e.target.value,
+                    });
                 }
                 break;
         }
@@ -172,6 +267,11 @@ const ModalForm = ({
             };
         }
         setItemList(tempList);
+
+        setEditedValues({
+            ...editedValues,
+            itemList: tempList,
+        });
     };
 
     const submitForm = () => {
@@ -188,6 +288,10 @@ const ModalForm = ({
         if (productDescription !== '')
             formData = { ...formData, productDescription };
         createInvoice(formData);
+    };
+
+    const submitEditedValues = () => {
+        editInvoice({ id: edit, editedValues });
     };
 
     switch (page) {
@@ -478,10 +582,18 @@ const ModalForm = ({
     }
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapStateToProps = (state) => {
     return {
-        createInvoice: (payload) => dispatch(createInvoice(payload)),
+        currentInvoice: state.invoice.currentInvoice,
     };
 };
 
-export default connect(null, mapDispatchToProps)(ModalForm);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        createInvoice: (payload) => dispatch(createInvoice(payload)),
+        getInvoice: (payload) => dispatch(getInvoice(payload)),
+        editInvoice: (payload) => dispatch(editInvoice(payload)),
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ModalForm);

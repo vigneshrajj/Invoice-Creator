@@ -19,18 +19,14 @@ const CardData = ({ innerText, cardType }) => {
     });
     if (innerText) {
         return (
-            <p className='text-lg mb-2' style={{ color: '#00C49A' }}>
+            <p className='text-lg mb-2 text-blue-600 font-bold'>
                 {cardType === 'revenue' && <span>₹</span>}
                 <animated.span>{number.to((n) => n.toFixed(0))}</animated.span>
                 {cardType === 'loyalty' && <span>%</span>}
             </p>
         );
     } else {
-        return (
-            <p className='text-lg mb-2' style={{ color: '#00C49A' }}>
-                No data
-            </p>
-        );
+        return <p className='text-lg mb-2 text-blue-600 font-bold'>No data</p>;
     }
 };
 
@@ -143,12 +139,12 @@ const Stats = ({ statInvoices, chartData }) => {
                         >
                             <stop
                                 offset='5%'
-                                stopColor='#00C49A'
+                                stopColor='rgba(37, 99, 235)'
                                 stopOpacity={0.8}
                             />
                             <stop
                                 offset='95%'
-                                stopColor='#00C49A'
+                                stopColor='rgba(37, 99, 235)'
                                 stopOpacity={0}
                             />
                         </linearGradient>
@@ -156,7 +152,7 @@ const Stats = ({ statInvoices, chartData }) => {
                     <Area
                         type='monotone'
                         dataKey='Revenue'
-                        stroke='#00C49A'
+                        stroke='rgba(37, 99, 235)'
                         fillOpacity={1}
                         fill='url(#colorEarning)'
                         dot={{ fill: '#fff' }}
@@ -192,7 +188,7 @@ const Stats = ({ statInvoices, chartData }) => {
                     <p className='font-bold text-2xl'>Loyalty</p>
                     <p className='text-lg' style={{ color: '#00C49A' }}>
                         <CardData
-                            innerText={stats.loyalty}
+                            innerText={stats.loyalty ? stats.loyalty : ''}
                             cardType='loyalty'
                         />
                     </p>

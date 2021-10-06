@@ -10,6 +10,7 @@ app.use(express.json());
 app.use(
     cors({
         credentials: true,
+        methods: ['GET', 'POST', 'PATCH', 'DELETE'],
         origin:
             process.env.NODE_ENV === 'production'
                 ? 'https://invoice-app-vignesh.netlify.app'

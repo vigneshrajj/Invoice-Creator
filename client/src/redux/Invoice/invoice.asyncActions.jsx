@@ -4,6 +4,8 @@ import {
     GET_INVOICE_COUNT,
     GET_STATS,
     GET_CHART_DATA,
+    SEARCH_INVOICE,
+    GET_ALL_CLIENTS,
     ACTION_FAILURE,
 } from './invoice.types';
 import axios from 'axios';
@@ -62,7 +64,7 @@ export const getStats = () => async (dispatch) => {
 export const editInvoice = (payload) => async (dispatch) => {
     try {
         const res = await instance.patch('/' + payload.id, {
-            updatedValues: payload.updatedValues,
+            updatedValues: payload.editedValues,
         });
     } catch (err) {
         dispatch({ type: ACTION_FAILURE, payload: err.response.data.error });
@@ -72,6 +74,27 @@ export const editInvoice = (payload) => async (dispatch) => {
 export const deleteInvoice = (payload) => async (dispatch) => {
     try {
         const res = await instance.delete('/' + payload);
+    } catch (err) {
+        dispatch({ type: ACTION_FAILURE, payload: err.response.data.error });
+    }
+};
+
+export const searchInvoice = (payload) => async (dispatch) => {
+    try {
+        const res = await instance.get('/search', {
+            params: { searchString: payload },
+        });
+        const invoices = await res.data.invoices;
+        dispatch({ type: SEARCH_INVOICE, payload: invoices });
+    } catch (err) {
+        dispatch({ type: ACTION_FAILURE, payload: err.response.data.error });
+    }
+};
+
+export const getClients = (payload) => async (dispatch) => {
+    try {
+        const res = await instance.get('/clients');
+        dispatch({ type: GET_ALL_CLIENTS, payload: res.data.clients });
     } catch (err) {
         dispatch({ type: ACTION_FAILURE, payload: err.response.data.error });
     }

@@ -57,7 +57,8 @@ module.exports = {
             res.cookie('jwt', token, {
                 httpOnly: true,
                 maxAge: maxAge * 1000,
-                sameSite: 'None',
+                sameSite:
+                    process.env.NODE_ENV === 'development' ? true : 'None',
                 secure: true,
             });
             res.status(201).json({ user: user._id });
@@ -76,7 +77,8 @@ module.exports = {
                 httpOnly: true,
                 secure: true,
                 maxAge: maxAge * 1000,
-                sameSite: 'None',
+                sameSite:
+                    process.env.NODE_ENV === 'development' ? true : 'None',
             });
             res.status(200).json({ user: user._id });
         } catch (err) {
@@ -99,7 +101,10 @@ module.exports = {
                     res.cookie('jwt', token, {
                         httpOnly: true,
                         maxAge: maxAge * 1000,
-                        sameSite: 'None',
+                        sameSite:
+                            process.env.NODE_ENV === 'development'
+                                ? true
+                                : 'None',
                         secure: true,
                     });
                     res.status(200).json({ user: user._id });
@@ -115,7 +120,10 @@ module.exports = {
                     res.cookie('jwt', token, {
                         httpOnly: true,
                         maxAge: maxAge * 1000,
-                        sameSite: 'None',
+                        sameSite:
+                            process.env.NODE_ENV === 'development'
+                                ? true
+                                : 'None',
                         secure: true,
                     });
                     res.status(201).json({ user: user._id });
@@ -127,7 +135,7 @@ module.exports = {
         res.cookie('jwt', '', {
             httpOnly: true,
             maxAge: 1,
-            sameSite: 'None',
+            sameSite: process.env.NODE_ENV === 'development' ? true : 'None',
             secure: true,
         });
         res.status(200).send({ message: 'logged out' });

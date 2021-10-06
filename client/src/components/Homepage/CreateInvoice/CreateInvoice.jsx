@@ -1,33 +1,30 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { createInvoice } from '../../../redux/Invoice/invoice.asyncActions';
+import {
+    getAllInvoices,
+    getStats,
+} from '../../../redux/Invoice/invoice.asyncActions';
 import { IoIosClose } from 'react-icons/io';
 import { GoChevronLeft, GoChevronRight } from 'react-icons/go';
 import ModalForm from './ModalForm';
 
 const CreateInvoice = ({
     setInvoiceModal,
-    createInvoice,
     getAllInvoices,
     getStats,
-    pageNo,
     edit,
     sendAgain,
 }) => {
     const [page, setPage] = useState(sendAgain ? 2 : 1);
     const [isNextDisabled, setIsNextDisabled] = useState(true);
-    const [formData, setFormData] = useState({});
-    const submitForm = (formData) => {
-        createInvoice(formData);
-    };
 
     return (
         <>
             <div className='overlay fixed w-screen h-screen opacity-50 bg-black z-10 left-0 top-0'></div>
-            <div className='create-invoice-modal fixed bg-gray-800 text-gray-300 rounded h-3/5 w-1/2 z-20 inset-0 m-auto py-2 px-3'>
+            <div className='create-invoice-modal fixed overflow-hidden bg-gray-800 text-gray-300 rounded h-3/5 w-1/2 z-20 inset-0 m-auto py-2 px-3'>
                 <div className='header'>
                     <p className='font-bold text-3xl text-center mb-5'>
-                        Create Invoice
+                        {edit ? 'Update' : 'Create'} Invoice
                     </p>
                     <IoIosClose
                         onClick={() => setInvoiceModal(false)}
@@ -42,7 +39,6 @@ const CreateInvoice = ({
                         setInvoiceModal,
                         getAllInvoices,
                         getStats,
-                        pageNo,
                         edit,
                         sendAgain,
                     }}
@@ -120,7 +116,8 @@ const CreateInvoice = ({
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        createInvoice: (payload) => dispatch(createInvoice(payload)),
+        getAllInvoices: (payload) => dispatch(getAllInvoices(payload)),
+        getStats: () => dispatch(getStats()),
     };
 };
 
