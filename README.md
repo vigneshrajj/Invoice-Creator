@@ -8,12 +8,13 @@
 
 
 <p align="center">
-  <a href="#demo">Demo</a> •
-	<a href="#key-features">Key Features</a> •
-	<a href="#technologies-used">Technologies Used</a> •
-  <a href="#how-to-setup">How To Setup</a> •
-  <a href="#license">License</a>
-	<br/>
+<a href="#demo">Demo</a> •
+<a href="#key-features">Key Features</a> •
+<a href="#technologies-used">Technologies Used</a> •
+<a href="#how-to-setup">How To Setup</a> •
+<a href="#to-do">To do</a> •
+<a href="#license">License</a>
+<br/>
 </p>
 
 [![GitHub top language](https://img.shields.io/github/languages/top/vigneshrajj/react-Invoice-App)](<![GitHub top language](https://img.shields.io/github/languages/top/vigneshrajj/react-Invoice-App)>)
@@ -74,6 +75,11 @@ $ npm run devInstall
 # Run the app
 $ npm run dev
 ```
+## To do
+- [ ] Remove persistent error messages on login and signup page
+- [ ] Fix routing issue on page reload in netlify
+- [ ] Update animations for invoice table and search results
+- [ ] Fix accessibility warnings
 
 ## [License](https://github.com/vigneshrajj/Invoice-Creator/blob/master/LICENSE)
 
